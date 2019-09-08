@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - VR Controller
+  - projectile
+  - FxTemporaire
+  - Button
   layers:
   - Default
   - TransparentFX
