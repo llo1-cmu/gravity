@@ -11,10 +11,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string sceneName = "Empty Room";
 
     void Update() {
-        // If someone presses the grip, reset the game
-         if(SteamVR_Actions._default.GrabGrip.GetState(RightInputSource) || 
+        if(SteamVR_Actions._default.GrabGrip.GetState(RightInputSource) && 
             SteamVR_Actions._default.GrabGrip.GetState(LeftInputSource)) {
-                SceneManager.LoadScene(sceneName);
-         }
+            // If someone holds both grips, reset the game
+            SceneManager.LoadScene(sceneName);
+        }
     }
 }
