@@ -9,15 +9,15 @@ public class Frisbee : MonoBehaviour
     private Transform attachedController;
     private SteamVR_Input_Sources LeftInputSource = SteamVR_Input_Sources.LeftHand;
     private SteamVR_Input_Sources RightInputSource = SteamVR_Input_Sources.RightHand;
-    private Queue<Vector3> positionRecord;
     private new Rigidbody rigidbody;
     private bool recalling;
     private Vector3 recallStartPosition;
-    private float recallStartTime; 
+    private float recallStartTime;
+    private Valve.VR.InteractionSystem.VelocityEstimator velocityEstimator;
     void Start()
     {
-        positionRecord = new Queue<Vector3>(21);
         rigidbody = GetComponent<Rigidbody>();
+        velocityEstimator = GetComponent<Valve.VR.InteractionSystem.VelocityEstimator>();
     }
 
     // Update is called once per frame
@@ -62,6 +62,8 @@ public class Frisbee : MonoBehaviour
             recalling = false;
             rigidbody.velocity = Vector3.zero;
             rigidbody.angularVelocity = Vector3.zero;
+            // Velocity is not calculated by VelocityEstimator
+            velocityEstimator.BeginEstimatingVelocity();
         }
     }
 
@@ -75,25 +77,14 @@ public class Frisbee : MonoBehaviour
                 rigidbody.MovePosition(attachedController.position + (Vector3.Scale(attachedController.forward, Vector3.one * 0.2f)));
                 // Rotate the frisbee to fit hand gesture
                 rigidbody.MoveRotation(attachedController.rotation);
-                // Add to the position record
-                positionRecord.Enqueue(transform.position);
-                if(positionRecord.Count > 20){
-                    positionRecord.Dequeue();
-                }
             }
             else if (attachedController != null){ // If frisbee is on hand but not grabbed
-                if(positionRecord.Count == 20){ // was grabbed for at least 0.2 seconds (one physics frame is 0.02s by default)
-                    Vector3 oldPosition = positionRecord.Dequeue();
-                    positionRecord.Clear();
-                    // Interpolate force from position 0.2 seconds ago
-                    Vector3 forceVector = transform.position - oldPosition;
-                    GetComponent<Rigidbody>().AddForce(Vector3.Scale(forceVector, Vector3.one * 1000.0f));
-                }
-                else{ // wasn't grabbed for at least 0.2 seconds
-                    // just drops
-                }
                 attachedController = null;
                 rigidbody.useGravity = true;
+                // Apply velocity estimated by VelocityEstimator
+                velocityEstimator.FinishEstimatingVelocity();
+                rigidbody.velocity = velocityEstimator.GetVelocityEstimate();
+                rigidbody.angularVelocity = velocityEstimator.GetAngularVelocityEstimate();
             }
         }
     }
