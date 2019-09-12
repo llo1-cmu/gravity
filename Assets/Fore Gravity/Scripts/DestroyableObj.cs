@@ -9,10 +9,6 @@ public class DestroyableObj : MonoBehaviour
     // Assign frisbee score threshold in inspector
     [SerializeField] private int threshold;
 
-    void Start() {
-        Disappear();
-    }
-
     private void Disappear(){
         this.GetComponent<Renderer>().material.color = Color.black;
         StartCoroutine(DisappearEffect(1f));
