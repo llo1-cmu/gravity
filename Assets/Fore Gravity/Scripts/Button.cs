@@ -4,16 +4,22 @@ using UnityEngine;
 
 public class Button : MonoBehaviour
 {
-    // Start is called before the first frame update
-    [SerializeField] private List<Door> currentDoors;
+    // Assign doors in the inspector
+    [SerializeField] private List<Door> currentDoors = null;
     void Start()
     {
         
     }
 
-    public void OpenDoor(){
+    private void OpenDoor(){
         foreach(Door door in currentDoors) {
             door.Open();
+        }
+    }
+
+    void OnTriggerEnter(Collider other){
+        if (other.tag == "Frisbee") {
+            OpenDoor();
         }
     }
 

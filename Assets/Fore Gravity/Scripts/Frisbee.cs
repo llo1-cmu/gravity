@@ -54,9 +54,6 @@ public class Frisbee : MonoBehaviour
         }
     }
     void OnTriggerEnter(Collider other){
-        if (other.tag == "Button") {
-            ((Button) other.GetComponent<Button>()).OpenDoor();
-        }
         if(other.tag == "VR Controller" && recalling){
             // Recall complete, clear all momentum
             recalling = false;
