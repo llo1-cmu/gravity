@@ -31,6 +31,7 @@ public class SpawnDestroyable : MonoBehaviour
                                                                                   Random.Range(0.0f, 1.0f),
                                                                                   Random.Range(0.0f, 1.0f));
             spawnedObject.GetComponent<Rigidbody>().velocity = Vector3.Normalize(mainCamera.position - spawnedObject.transform.position);
+            spawnedObject.GetComponent<Rigidbody>().velocity += mainCamera.InverseTransformDirection(Random.Range(-1.0f, 1.0f),Random.Range(-1.0f, 1.0f),0.0f);
             lastSpawnTime = Time.time;
         }
     }
