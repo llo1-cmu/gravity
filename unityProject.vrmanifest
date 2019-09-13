@@ -5,7 +5,7 @@
       "app_key": "application.generated.unity.gravity.exe",
       "launch_type": "url",
       "url": "steam://launch/",
-      "action_manifest_path": "C:\\Users\\mongyahh\\Desktop\\XR\\Gravity\\actions.json",
+      "action_manifest_path": "D:\\Git Repository\\gravity\\actions.json",
       "strings": {
         "en_us": {
           "name": "Gravity [Testing]"

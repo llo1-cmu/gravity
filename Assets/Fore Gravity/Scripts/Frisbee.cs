@@ -14,6 +14,7 @@ public class Frisbee : MonoBehaviour
     private Vector3 recallStartPosition;
     private float recallStartTime;
     private Valve.VR.InteractionSystem.VelocityEstimator velocityEstimator;
+    [SerializeField] private float recallSpeed = 10.0f;
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -37,14 +38,16 @@ public class Frisbee : MonoBehaviour
             // Initialize the recall
             rigidbody.useGravity = false;
             recalling = true;
-            recallStartPosition = transform.position;
-            recallStartTime = Time.time;
+            //recallStartPosition = transform.position;
+            //recallStartTime = Time.time;
             // Clear velocity
             rigidbody.velocity = Vector3.zero;
         }
         else if(recalling && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Non-physical recall
-            rigidbody.MovePosition(Vector3.Lerp(recallStartPosition, attachedController.position, (Time.time - recallStartTime)/0.2f ));
+            Vector3 recallVector = attachedController.position - transform.position;
+            rigidbody.MovePosition(transform.position + Vector3.Normalize(recallVector) * Mathf.Min(recallSpeed*Time.deltaTime, recallVector.magnitude));
+            //rigidbody.MovePosition(Vector3.Lerp(recallStartPosition, attachedController.position, (Time.time - recallStartTime)/0.2f ));
         }
         else if(recalling && !(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Recall cancelled (dropped)
@@ -81,9 +84,16 @@ public class Frisbee : MonoBehaviour
                 // Apply velocity estimated by VelocityEstimator
                 velocityEstimator.FinishEstimatingVelocity();
                 rigidbody.velocity = velocityEstimator.GetVelocityEstimate();
-                rigidbody.angularVelocity = velocityEstimator.GetAngularVelocityEstimate();
+                rigidbody.angularVelocity = ScaleLocalAngularVelocity(velocityEstimator.GetAngularVelocityEstimate(), new Vector3(0.1f, 1.0f, 0.1f));
             }
         }
     }
 
+    void FixedUpdate(){
+        rigidbody.angularVelocity = ScaleLocalAngularVelocity(rigidbody.angularVelocity, new Vector3(0.9f, 0.999f, 0.9f));
+    }
+
+    Vector3 ScaleLocalAngularVelocity(Vector3 angularVelocity, Vector3 scaleVector){
+        return transform.TransformDirection(Vector3.Scale(transform.InverseTransformDirection(angularVelocity), scaleVector));
+    }
 }

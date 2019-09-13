@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         if(SteamVR_Actions._default.GrabGrip.GetState(RightInputSource) && 
             SteamVR_Actions._default.GrabGrip.GetState(LeftInputSource)) {
             // If someone holds both grips, reset the game
+            destroyedObjects = 0; // reset the stats
             SceneManager.LoadScene(startScene);
         }
 
