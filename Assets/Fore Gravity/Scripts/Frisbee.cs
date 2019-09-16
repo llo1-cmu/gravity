@@ -5,6 +5,9 @@ using Valve.VR;
 
 public class Frisbee : MonoBehaviour
 {
+
+    private List<Vector3> frisbeePositions;
+    private bool recordingPos = false;
     [SerializeField] private Transform leftController, rightController;
     private Transform attachedController;
     private SteamVR_Input_Sources LeftInputSource = SteamVR_Input_Sources.LeftHand;
@@ -15,6 +18,7 @@ public class Frisbee : MonoBehaviour
     private float recallStartTime;
     private Valve.VR.InteractionSystem.VelocityEstimator velocityEstimator;
     [SerializeField] private float recallSpeed = 10.0f;
+
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -38,6 +42,7 @@ public class Frisbee : MonoBehaviour
             // Initialize the recall
             rigidbody.useGravity = false;
             recalling = true;
+            recordingPos = false;
             //recallStartPosition = transform.position;
             //recallStartTime = Time.time;
             // Clear velocity
@@ -55,16 +60,39 @@ public class Frisbee : MonoBehaviour
             rigidbody.useGravity = true;
             attachedController = null;
         }
-    }
-    void OnTriggerEnter(Collider other){
-        if(other.tag == "VR Controller" && recalling){
-            // Recall complete, clear all momentum
-            recalling = false;
-            rigidbody.velocity = Vector3.zero;
-            rigidbody.angularVelocity = Vector3.zero;
-            // Velocity is not calculated by VelocityEstimator
-            velocityEstimator.BeginEstimatingVelocity();
+        else if (!recalling && recordingPos){
+            frisbeePositions.Add(transform.position);
         }
+    }
+
+    void OnTriggerEnter(Collider other){
+        switch(other.tag) {
+            case "VR Controller":
+                if (!recalling) break;
+                // Recall complete, clear all momentum
+                recalling = false;
+                rigidbody.velocity = Vector3.zero;
+                rigidbody.angularVelocity = Vector3.zero;
+                // Velocity is not calculated by VelocityEstimator
+                velocityEstimator.BeginEstimatingVelocity();
+                break;
+
+            case "Plane 1":
+                SaveData.DataSave(frisbeePositions, 1);
+                recordingPos = false;
+                break;
+
+            default:
+                break;
+        }
+        // if(other.tag == "VR Controller" && recalling){
+        //     // Recall complete, clear all momentum
+        //     recalling = false;
+        //     rigidbody.velocity = Vector3.zero;
+        //     rigidbody.angularVelocity = Vector3.zero;
+        //     // Velocity is not calculated by VelocityEstimator
+        //     velocityEstimator.BeginEstimatingVelocity();
+        // }
     }
 
     void OnTriggerStay(Collider other){
@@ -78,7 +106,11 @@ public class Frisbee : MonoBehaviour
                 // Rotate the frisbee to fit hand gesture
                 rigidbody.MoveRotation(attachedController.rotation);
             }
-            else if (attachedController != null){ // If frisbee is on hand but not grabbed
+            else if (attachedController != null){ // If frisbee is on hand but not grabbed (being thrown)
+                frisbeePositions = new List<Vector3>();
+                frisbeePositions.Add(transform.position);
+                recordingPos = true;
+
                 attachedController = null;
                 rigidbody.useGravity = true;
                 // Apply velocity estimated by VelocityEstimator
