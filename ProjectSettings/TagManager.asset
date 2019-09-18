@@ -8,6 +8,7 @@ TagManager:
   - projectile
   - FxTemporaire
   - Frisbee
+  - Target Plane
   layers:
   - Default
   - TransparentFX

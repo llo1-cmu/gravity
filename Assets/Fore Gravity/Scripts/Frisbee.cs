@@ -44,14 +44,14 @@ public class Frisbee : MonoBehaviour
             recalling = true;
             recordingPos = false;
             //recallStartPosition = transform.position;
-            //recallStartTime = Time.time;
+            recallStartTime = Time.time;
             // Clear velocity
-            rigidbody.velocity = Vector3.zero;
+            //rigidbody.velocity = Vector3.zero;
         }
         else if(recalling && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Non-physical recall
             Vector3 recallVector = attachedController.position - transform.position;
-            rigidbody.MovePosition(transform.position + Vector3.Normalize(recallVector) * Mathf.Min(recallSpeed*Time.deltaTime, recallVector.magnitude));
+            rigidbody.MovePosition(transform.position + Vector3.Normalize(recallVector) * Mathf.Min(recallSpeed*Time.deltaTime*(Time.time-recallStartTime), recallVector.magnitude));
             //rigidbody.MovePosition(Vector3.Lerp(recallStartPosition, attachedController.position, (Time.time - recallStartTime)/0.2f ));
         }
         else if(recalling && !(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
@@ -77,7 +77,7 @@ public class Frisbee : MonoBehaviour
                 velocityEstimator.BeginEstimatingVelocity();
                 break;
 
-            case "Plane 1":
+            case "Target Plane":
                 SaveData.DataSave(frisbeePositions, 1);
                 recordingPos = false;
                 break;

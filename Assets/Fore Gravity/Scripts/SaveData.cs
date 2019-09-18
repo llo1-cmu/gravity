@@ -5,7 +5,7 @@ using System.IO;
 
 public class SaveData : MonoBehaviour
 {
-    static string filePath = @"/frisbee_data.csv";
+    static string filePath = @"./frisbee_data.csv";
     // Start is called before the first frame update
     void Start()
     {
