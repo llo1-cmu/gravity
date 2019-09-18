@@ -9,6 +9,7 @@ TagManager:
   - FxTemporaire
   - Frisbee
   - Target Plane
+  - UI Button
   layers:
   - Default
   - TransparentFX

@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
 
         if (destroyedObjects >= totalObjectsToWin) {
             // TODO: enable this if you guys decide on canvas screen!
-            //winScreen.SetActive(true);
+            winScreen.SetActive(true);
         }
     }
 }

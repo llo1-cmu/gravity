@@ -76,12 +76,13 @@ public class Frisbee : MonoBehaviour
                 // Velocity is not calculated by VelocityEstimator
                 velocityEstimator.BeginEstimatingVelocity();
                 break;
-
             case "Target Plane":
                 SaveData.DataSave(frisbeePositions, 1);
                 recordingPos = false;
                 break;
-
+            case "UI Button":
+                other.GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+                break;
             default:
                 break;
         }
