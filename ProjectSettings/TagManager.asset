@@ -10,6 +10,7 @@ TagManager:
   - Frisbee
   - Target Plane
   - UI Button
+  - gravity field
   layers:
   - Default
   - TransparentFX

@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    #pragma warning disable 0649
     private SteamVR_Input_Sources LeftInputSource = SteamVR_Input_Sources.LeftHand;
     private SteamVR_Input_Sources RightInputSource = SteamVR_Input_Sources.RightHand;
     [SerializeField] private string startScene = "Empty Room";
@@ -14,7 +15,8 @@ public class GameManager : MonoBehaviour
     private static int destroyedObjects = 0;
     // TODO: auto populate this by having destroyable objs send mssg to gm
     private static int totalObjectsToWin = 4;
-    [SerializeField] private GameObject winScreen = null;
+    [SerializeField] private GameObject winScreen;
+    #pragma warning restore 0649
 
     void Start(){
         S = this;

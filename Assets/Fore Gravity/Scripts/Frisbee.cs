@@ -6,6 +6,8 @@ using Valve.VR;
 public class Frisbee : MonoBehaviour
 {
 
+    #pragma warning disable 0649
+
     private List<Vector3> frisbeePositions;
     private bool recordingPos = false;
     [SerializeField] private Transform leftController, rightController;
@@ -18,6 +20,10 @@ public class Frisbee : MonoBehaviour
     private float recallStartTime;
     private Valve.VR.InteractionSystem.VelocityEstimator velocityEstimator;
     [SerializeField] private float recallSpeed = 10.0f;
+
+    [SerializeField] private GameObject gravityField;
+
+    #pragma warning restore 0649
 
     void Start()
     {
@@ -128,5 +134,11 @@ public class Frisbee : MonoBehaviour
 
     Vector3 ScaleLocalAngularVelocity(Vector3 angularVelocity, Vector3 scaleVector){
         return transform.TransformDirection(Vector3.Scale(transform.InverseTransformDirection(angularVelocity), scaleVector));
+    }
+
+    //TODO: this should scale based on size of object we destroy as param
+    // also should probably be moved to FrisbeeGravity
+    public void IncreaseGravityField(){
+        gravityField.GetComponent<SphereCollider>().radius *= 1.1f;
     }
 }
