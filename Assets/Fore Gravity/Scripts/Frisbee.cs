@@ -19,9 +19,12 @@ public class Frisbee : MonoBehaviour
     private Vector3 recallStartPosition;
     private float recallStartTime;
     private Valve.VR.InteractionSystem.VelocityEstimator velocityEstimator;
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip catchSound, throwSound, recallSound;
     [SerializeField] private float recallSpeed = 10.0f;
 
     [SerializeField] private GameObject gravityField;
+    private bool initialPromptPlayed, firstCaughtPlayed, firstSphereHit;
 
     #pragma warning restore 0649
 
@@ -29,6 +32,11 @@ public class Frisbee : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         velocityEstimator = GetComponent<Valve.VR.InteractionSystem.VelocityEstimator>();
+        audioSource = GetComponent<AudioSource>();
+        if(Tutorial.IsTutorial()){
+            Tutorial.PlayFrisbeePrompt();
+            initialPromptPlayed = true;
+        }
     }
 
     // Update is called once per frame
@@ -53,6 +61,8 @@ public class Frisbee : MonoBehaviour
             recallStartTime = Time.time;
             // Clear velocity
             //rigidbody.velocity = Vector3.zero;
+
+            audioSource.PlayOneShot(recallSound);
         }
         else if(recalling && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Non-physical recall
@@ -69,6 +79,11 @@ public class Frisbee : MonoBehaviour
         else if (!recalling && recordingPos){
             frisbeePositions.Add(transform.position);
         }
+
+        if(!firstSphereHit && Tutorial.IsTutorial() && GameManager.S.GetDestroyedScore() > 0){
+            Tutorial.PlaySphereHit();
+            firstSphereHit = true;
+        }
     }
 
     void OnTriggerEnter(Collider other){
@@ -81,6 +96,12 @@ public class Frisbee : MonoBehaviour
                 rigidbody.angularVelocity = Vector3.zero;
                 // Velocity is not calculated by VelocityEstimator
                 velocityEstimator.BeginEstimatingVelocity();
+                audioSource.PlayOneShot(catchSound);
+                gravityField.SetActive(false);
+                if(Tutorial.IsTutorial() && !firstCaughtPlayed){
+                    Tutorial.PlayFrisbeeCaught();
+                    firstCaughtPlayed = true;
+                }
                 break;
             case "Target Plane":
                 SaveData.DataSave(frisbeePositions, 1);
@@ -124,9 +145,18 @@ public class Frisbee : MonoBehaviour
                 velocityEstimator.FinishEstimatingVelocity();
                 rigidbody.velocity = velocityEstimator.GetVelocityEstimate();
                 rigidbody.angularVelocity = ScaleLocalAngularVelocity(velocityEstimator.GetAngularVelocityEstimate(), new Vector3(0.1f, 1.0f, 0.1f));
+
+                audioSource.PlayOneShot(throwSound);
+                gravityField.SetActive(true);
             }
         }
     }
+    /*void OnTriggerExit(Collider other){
+        if(attachedController != null && rigidbody.useGravity == false){
+            // Recall the frisbee if it accidentally leaves the hand.
+            recalling = true;
+        }
+    }*/
 
     void FixedUpdate(){
         rigidbody.angularVelocity = ScaleLocalAngularVelocity(rigidbody.angularVelocity, new Vector3(0.9f, 0.999f, 0.9f));
