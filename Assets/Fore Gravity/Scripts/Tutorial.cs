@@ -21,8 +21,9 @@ public class Tutorial : MonoBehaviour
     public static bool IsTutorial(){
         return instance != null ? true : false;
     }
-    public static void PlayIntro(){
+    public static void PlayWarning(){
         instance.shipAudioSource.PlayOneShot(instance.initialWarning);
+        instance.StartCoroutine(PlayWarningTime());
     }
     public static void PlayFrisbeePrompt(){
         instance.frisbeeAudioSource.PlayOneShot(instance.frisbeeCalling);
@@ -32,5 +33,10 @@ public class Tutorial : MonoBehaviour
     }
     public static void PlaySphereHit(){
         instance.frisbeeAudioSource.PlayOneShot(instance.frisbeeAffirm);
+    }
+
+    static IEnumerator PlayWarningTime(){
+        yield return new WaitForSeconds(7);
+        instance.shipAudioSource.Stop();
     }
 }

@@ -16,6 +16,11 @@ public class GameManager : MonoBehaviour
     // TODO: auto populate this by having destroyable objs send mssg to gm
     private static int totalObjectsToWin = 4;
     [SerializeField] private GameObject winScreen;
+    [SerializeField] private GameObject cameraRig;
+    [SerializeField] private GameObject frisbee;
+    [SerializeField] private Vector3 placeToMove;
+    [SerializeField] private Vector3 frisbeePlaceToMove;
+    bool won = false;
     #pragma warning restore 0649
 
     void Start(){
@@ -47,9 +52,23 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(startScene);
         }
 
-        if (destroyedObjects >= totalObjectsToWin) {
+        if (destroyedObjects >= totalObjectsToWin && !won) {
             // TODO: enable this if you guys decide on canvas screen!
-            winScreen.SetActive(true);
+            //winScreen.SetActive(true);
+            //TODO: coroutine to black out screen
+            StartCoroutine(blackOutScreen());
+            won = true;
         }
+    }
+
+    IEnumerator blackOutScreen(){
+        Tutorial.PlayWarning();
+        //black out screen
+        SteamVR_Fade.Start(Color.black, 7.0f);
+        yield return new WaitForSeconds(7);
+        //frisbee.transform.position = frisbeePlaceToMove;
+        //cameraRig.transform.position = placeToMove;
+        SceneManager.LoadScene("Hexagon");
+        SteamVR_Fade.Start(Color.clear, 2.0f);
     }
 }
