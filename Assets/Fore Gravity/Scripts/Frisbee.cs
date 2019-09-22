@@ -163,6 +163,15 @@ public class Frisbee : MonoBehaviour
         }
     }*/
 
+    void OnCollisionEnter(Collision collision){
+        if(collision.collider.tag == "Target Plane"){
+            Vector3 offsetVector = collision.contacts[0].point - collision.transform.position;
+            print("Plane hit: " + collision.gameObject.name);
+            print("Offset vector: " + offsetVector.ToString("f4"));
+            print("Offset distance: " + offsetVector.magnitude.ToString("f4"));
+        }
+    }
+
     void FixedUpdate(){
         rigidbody.angularVelocity = ScaleLocalAngularVelocity(rigidbody.angularVelocity, new Vector3(0.9f, 0.999f, 0.9f));
     }
