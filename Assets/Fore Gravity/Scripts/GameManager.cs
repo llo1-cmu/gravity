@@ -57,12 +57,12 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(startScene);
         }
 
-        if (destroyedObjects >= totalObjectsToWin && !won) {
+        if ((destroyedObjects >= totalObjectsToWin && !won) || Input.GetButtonUp("Fire3")) {
             // TODO: enable this if you guys decide on canvas screen!
             //winScreen.SetActive(true);
             //TODO: coroutine to black out screen
-            StartCoroutine(blackOutScreen());
             won = true;
+            StartCoroutine(blackOutScreen());
         }
     }
 
@@ -70,9 +70,13 @@ public class GameManager : MonoBehaviour
         Tutorial.PlayWarning();
         //black out screen
         SteamVR_Fade.Start(Color.black, 7.0f);
+        //GetComponent<SteamVR_LoadLevel>().levelName = "Hexagon";
+        //GetComponent<SteamVR_LoadLevel>().Trigger();
+        yield return new WaitForSeconds(7);
+        Application.backgroundLoadingPriority = ThreadPriority.Low;
         AsyncOperation AO = SceneManager.LoadSceneAsync("Hexagon"); 
         AO.allowSceneActivation = false;
-        yield return new WaitForSeconds(7);
+
         //frisbee.transform.position = frisbeePlaceToMove;
         //cameraRig.transform.position = placeToMove;
         //SceneManager.LoadScene("Hexagon");
@@ -83,5 +87,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         AO.allowSceneActivation = true;
+
+        //SceneManager.UnloadSceneAsync(startScene);
     }
 }

@@ -84,6 +84,25 @@ public class Frisbee : MonoBehaviour
             frisbeePositions.Add(transform.position);
         }
 
+        if( !(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) && attachedController == rightController)
+        && !(SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource) && attachedController == leftController)
+        && attachedController != null){
+            frisbeePositions = new List<Vector3>();
+            frisbeePositions.Add(transform.position);
+            recordingPos = true;
+            transform.parent = null;
+            attachedController = null;
+            rigidbody.useGravity = true;
+            rigidbody.isKinematic = false;
+            // Apply velocity estimated by VelocityEstimator
+            velocityEstimator.FinishEstimatingVelocity();
+            rigidbody.velocity = velocityEstimator.GetVelocityEstimate();
+            rigidbody.angularVelocity = ScaleLocalAngularVelocity(velocityEstimator.GetAngularVelocityEstimate(), new Vector3(0.1f, 1.0f, 0.1f));
+
+            audioSource.PlayOneShot(throwSound);
+            gravityField.SetActive(true);
+        }
+
         if(!firstSphereHit && Tutorial.IsTutorial() && GameManager.S.GetDestroyedScore() > 0){
             Tutorial.PlaySphereHit();
             firstSphereHit = true;
@@ -98,6 +117,10 @@ public class Frisbee : MonoBehaviour
                 recalling = false;
                 rigidbody.velocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;
+                rigidbody.isKinematic = true;
+                transform.SetParent(attachedController, false);
+                transform.position = attachedController.position;
+                transform.rotation = attachedController.rotation;
                 // Velocity is not calculated by VelocityEstimator
                 velocityEstimator.BeginEstimatingVelocity();
                 audioSource.PlayOneShot(catchSound);
@@ -128,7 +151,7 @@ public class Frisbee : MonoBehaviour
         // }
     }
 
-    void OnTriggerStay(Collider other){
+    /*void OnTriggerStay(Collider other){
         if(other.tag == "VR Controller"){
             // If someone grabs the frisbee with either hand
             if( (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) && attachedController == rightController)
@@ -155,7 +178,7 @@ public class Frisbee : MonoBehaviour
                 gravityField.SetActive(true);
             }
         }
-    }
+    }*/
     /*void OnTriggerExit(Collider other){
         if(attachedController != null && rigidbody.useGravity == false){
             // Recall the frisbee if it accidentally leaves the hand.
