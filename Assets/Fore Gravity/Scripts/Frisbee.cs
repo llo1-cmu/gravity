@@ -28,6 +28,7 @@ public class Frisbee : MonoBehaviour
 
     [SerializeField] private Material originalMaterial, recallMaterial;
     [SerializeField] private MeshRenderer FrisbeeSphere;
+    [SerializeField] private SteamVR_Action_Vibration vibration;
 
     #pragma warning restore 0649
 
@@ -73,6 +74,12 @@ public class Frisbee : MonoBehaviour
             Vector3 recallVector = attachedController.position - transform.position;
             rigidbody.MovePosition(transform.position + Vector3.Normalize(recallVector) * Mathf.Min(recallSpeed*Time.deltaTime*(Time.time-recallStartTime), recallVector.magnitude));
             //rigidbody.MovePosition(Vector3.Lerp(recallStartPosition, attachedController.position, (Time.time - recallStartTime)/0.2f ));
+            if(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource)){
+                vibration.Execute(0.0f, 0.1f, 40.0f, 0.1f, RightInputSource);
+            }
+            else if(SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource)){
+                vibration.Execute(0.0f, 0.1f, 40.0f, 0.1f, LeftInputSource);
+            }
         }
         else if(recalling && !(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Recall cancelled (dropped)
@@ -126,6 +133,14 @@ public class Frisbee : MonoBehaviour
                 audioSource.PlayOneShot(catchSound);
                 FrisbeeSphere.material = originalMaterial;
                 gravityField.SetActive(false);
+
+                if(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource)){
+                    vibration.Execute(0.0f, 0.3f, 160.0f, 1.0f, RightInputSource);
+                }
+                else if(SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource)){
+                    vibration.Execute(0.0f, 0.3f, 160.0f, 1.0f, LeftInputSource);
+                }
+
                 if(Tutorial.IsTutorial() && !firstCaughtPlayed){
                     Tutorial.PlayFrisbeeCaught();
                     firstCaughtPlayed = true;
