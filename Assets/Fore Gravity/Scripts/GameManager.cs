@@ -25,6 +25,11 @@ public class GameManager : MonoBehaviour
 
     void Start(){
         S = this;
+        // Fade in effect
+        //if(SceneManager.GetActiveScene().name != startScene){
+			SteamVR_Fade.Start(Color.black, 0);
+			SteamVR_Fade.Start(Color.clear, 2);
+        //}
     }
 
     public void UpdateDestroyedScore() {
@@ -65,10 +70,18 @@ public class GameManager : MonoBehaviour
         Tutorial.PlayWarning();
         //black out screen
         SteamVR_Fade.Start(Color.black, 7.0f);
+        AsyncOperation AO = SceneManager.LoadSceneAsync("Hexagon"); 
+        AO.allowSceneActivation = false;
         yield return new WaitForSeconds(7);
         //frisbee.transform.position = frisbeePlaceToMove;
         //cameraRig.transform.position = placeToMove;
-        SceneManager.LoadScene("Hexagon");
-        SteamVR_Fade.Start(Color.clear, 2.0f);
+        //SceneManager.LoadScene("Hexagon");
+        //SteamVR_Fade.Start(Color.clear, 2.0f);
+        
+        while(AO.progress < 0.9f)
+        {
+            yield return null;
+        }
+        AO.allowSceneActivation = true;
     }
 }

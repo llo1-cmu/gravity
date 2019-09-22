@@ -26,6 +26,9 @@ public class Frisbee : MonoBehaviour
     [SerializeField] private GameObject gravityField;
     private bool initialPromptPlayed, firstCaughtPlayed, firstSphereHit;
 
+    [SerializeField] private Material originalMaterial, recallMaterial;
+    [SerializeField] private MeshRenderer FrisbeeSphere;
+
     #pragma warning restore 0649
 
     void Start()
@@ -63,6 +66,7 @@ public class Frisbee : MonoBehaviour
             //rigidbody.velocity = Vector3.zero;
 
             audioSource.PlayOneShot(recallSound);
+            FrisbeeSphere.material = recallMaterial;
         }
         else if(recalling && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Non-physical recall
@@ -97,6 +101,7 @@ public class Frisbee : MonoBehaviour
                 // Velocity is not calculated by VelocityEstimator
                 velocityEstimator.BeginEstimatingVelocity();
                 audioSource.PlayOneShot(catchSound);
+                FrisbeeSphere.material = originalMaterial;
                 gravityField.SetActive(false);
                 if(Tutorial.IsTutorial() && !firstCaughtPlayed){
                     Tutorial.PlayFrisbeeCaught();
