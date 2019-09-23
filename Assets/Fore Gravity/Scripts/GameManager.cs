@@ -14,22 +14,32 @@ public class GameManager : MonoBehaviour
     public static GameManager S;
     private static int destroyedObjects = 0;
     // TODO: auto populate this by having destroyable objs send mssg to gm
-    private static int totalObjectsToWin = 4;
+    private static int totalObjectsToWin = 0;
     [SerializeField] private GameObject winScreen;
     [SerializeField] private GameObject cameraRig;
     [SerializeField] private GameObject frisbee;
     [SerializeField] private Vector3 placeToMove;
     [SerializeField] private Vector3 frisbeePlaceToMove;
+
+    //TODO: player is currently just the right glove!
+    [SerializeField] public GameObject player;
     bool won = false;
     #pragma warning restore 0649
 
-    void Start(){
+    void Awake(){
         S = this;
+    }
+
+    void Start(){
         // Fade in effect
         //if(SceneManager.GetActiveScene().name != startScene){
 			SteamVR_Fade.Start(Color.black, 0);
 			SteamVR_Fade.Start(Color.clear, 2);
         //}
+    }
+
+    public void AddDestroyableObject(){
+        totalObjectsToWin++;
     }
 
     public void UpdateDestroyedScore() {

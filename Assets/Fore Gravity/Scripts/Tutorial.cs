@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class Tutorial : MonoBehaviour
 {
+    #pragma warning disable 0649
     [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource;
     [SerializeField] AudioClip initialWarning, frisbeeCalling, frisbeeCaught, frisbeeAffirm;
     private static Tutorial instance;
-    // Start is called before the first frame update
+    #pragma warning restore 0649
+
     void Awake()
     {
         instance = this;
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         

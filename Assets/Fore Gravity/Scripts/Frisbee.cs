@@ -16,6 +16,7 @@ public class Frisbee : MonoBehaviour
     private SteamVR_Input_Sources RightInputSource = SteamVR_Input_Sources.RightHand;
     private new Rigidbody rigidbody;
     private bool recalling;
+    private bool introScene;
     private Vector3 recallStartPosition;
     private float recallStartTime;
     private Valve.VR.InteractionSystem.VelocityEstimator velocityEstimator;
@@ -24,7 +25,7 @@ public class Frisbee : MonoBehaviour
     [SerializeField] private float recallSpeed = 10.0f;
 
     [SerializeField] private GameObject gravityField;
-    private bool initialPromptPlayed, firstCaughtPlayed, firstSphereHit;
+    private bool firstCaughtPlayed, firstSphereHit;
 
     [SerializeField] private Material originalMaterial, recallMaterial;
     [SerializeField] private MeshRenderer FrisbeeSphere;
@@ -39,17 +40,13 @@ public class Frisbee : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if(Tutorial.IsTutorial()){
             Tutorial.PlayFrisbeePrompt();
-            initialPromptPlayed = true;
         }
+        introScene = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //Debug.Log("Right Squeeze value:" + SteamVR_Actions._default.Squeeze.GetAxis(RightInputSource).ToString());
-        //Debug.Log("Right GrabPinch value:" + SteamVR_Actions._default.GrabPinch.GetState(RightInputSource).ToString());
-        //Debug.Log("Right Trackpad value:" + SteamVR_Actions._default.Teleport.GetState(RightInputSource).ToString());
-        if((SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource)) && attachedController == null){
+        if((SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource)) && attachedController == null && !introScene){
             // Trigger pulled when frisbee not on hand => Recall 
             if(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource)){
                 attachedController = rightController;
@@ -68,6 +65,10 @@ public class Frisbee : MonoBehaviour
 
             audioSource.PlayOneShot(recallSound);
             FrisbeeSphere.material = recallMaterial;
+        }
+        else if (introScene) {
+            // Frisbee drifts towards player
+            transform.position = Vector3.MoveTowards(transform.position, GameManager.S.player.transform.position, 0.0003f);
         }
         else if(recalling && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Non-physical recall
@@ -121,6 +122,7 @@ public class Frisbee : MonoBehaviour
             case "VR Controller":
                 if (!recalling) break;
                 // Recall complete, clear all momentum
+                if (introScene) introScene = false;
                 recalling = false;
                 rigidbody.velocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;
@@ -218,9 +220,8 @@ public class Frisbee : MonoBehaviour
         return transform.TransformDirection(Vector3.Scale(transform.InverseTransformDirection(angularVelocity), scaleVector));
     }
 
-    //TODO: this should scale based on size of object we destroy as param
-    // also should probably be moved to FrisbeeGravity
+    //TODO: scale based on size of object we destroy?
     public void IncreaseGravityField(){
-        gravityField.GetComponent<SphereCollider>().radius *= 1.1f;
+        gravityField.GetComponent<GravityField>().IncreaseGravityField();
     }
 }

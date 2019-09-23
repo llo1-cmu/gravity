@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2460916159256526146}
   - component: {fileID: 5722575020397589969}
   - component: {fileID: -3712999517798899936}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spawned Destroyable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,7 +149,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6153779763783088941}
   - component: {fileID: 2567612824748713084}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
