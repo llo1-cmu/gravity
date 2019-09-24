@@ -31,6 +31,8 @@ public class Frisbee : MonoBehaviour
     [SerializeField] private MeshRenderer FrisbeeSphere;
     [SerializeField] private SteamVR_Action_Vibration vibration;
 
+    [SerializeField] private Transform mainCamera;
+
     #pragma warning restore 0649
 
     void Start()
@@ -40,8 +42,8 @@ public class Frisbee : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if(Tutorial.IsTutorial()){
             Tutorial.PlayFrisbeePrompt();
+            introScene = true;
         }
-        introScene = true;
     }
 
     void Update()
@@ -62,7 +64,8 @@ public class Frisbee : MonoBehaviour
             recallStartTime = Time.time;
             // Clear velocity
             //rigidbody.velocity = Vector3.zero;
-
+            // Also estimate the velocity
+            velocityEstimator.BeginEstimatingVelocity();
             audioSource.PlayOneShot(recallSound);
             FrisbeeSphere.material = recallMaterial;
         }
@@ -87,6 +90,9 @@ public class Frisbee : MonoBehaviour
             recalling = false;
             rigidbody.useGravity = true;
             attachedController = null;
+            // Apply estimated velocity
+            velocityEstimator.FinishEstimatingVelocity();
+            rigidbody.velocity = velocityEstimator.GetVelocityEstimate();
         }
         else if (!recalling && recordingPos){
             frisbeePositions.Add(transform.position);
@@ -95,6 +101,7 @@ public class Frisbee : MonoBehaviour
         if( !(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) && attachedController == rightController)
         && !(SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource) && attachedController == leftController)
         && attachedController != null){
+            // Throwing the frisbee
             frisbeePositions = new List<Vector3>();
             frisbeePositions.Add(transform.position);
             recordingPos = true;
@@ -104,7 +111,16 @@ public class Frisbee : MonoBehaviour
             rigidbody.isKinematic = false;
             // Apply velocity estimated by VelocityEstimator
             velocityEstimator.FinishEstimatingVelocity();
-            rigidbody.velocity = velocityEstimator.GetVelocityEstimate();
+            // Curve the frisbee towards the center
+            float degreesFromCenter = Vector3.Angle(velocityEstimator.GetVelocityEstimate(), mainCamera.rotation.eulerAngles);
+            if(degreesFromCenter < 45.0f){
+                Vector3 adjustedDirection = (degreesFromCenter/45.0f) * velocityEstimator.GetVelocityEstimate().normalized + ((45.0f-degreesFromCenter)/45.0f) * mainCamera.forward;
+                rigidbody.velocity = adjustedDirection * velocityEstimator.GetVelocityEstimate().magnitude * 1.5f;
+            }
+            else{
+                rigidbody.velocity = velocityEstimator.GetVelocityEstimate()*1.5f;
+            }
+            
             rigidbody.angularVelocity = ScaleLocalAngularVelocity(velocityEstimator.GetAngularVelocityEstimate(), new Vector3(0.1f, 1.0f, 0.1f));
 
             audioSource.PlayOneShot(throwSound);
@@ -120,7 +136,7 @@ public class Frisbee : MonoBehaviour
     void OnTriggerEnter(Collider other){
         switch(other.tag) {
             case "VR Controller":
-                if (!recalling) break;
+                if (!recalling && !introScene) break;
                 // Recall complete, clear all momentum
                 if (introScene) introScene = false;
                 recalling = false;
