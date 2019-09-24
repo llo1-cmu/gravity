@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
             SteamVR_Actions._default.GrabGrip.GetState(LeftInputSource)) {
             // If someone holds both grips, reset the game
             destroyedObjects = 0; // reset the stats
+            won = false;
             SceneManager.LoadScene(startScene);
         }
 
@@ -84,7 +85,7 @@ public class GameManager : MonoBehaviour
         //GetComponent<SteamVR_LoadLevel>().Trigger();
         yield return new WaitForSeconds(7);
         Application.backgroundLoadingPriority = ThreadPriority.Low;
-        AsyncOperation AO = SceneManager.LoadSceneAsync("Hexagon"); 
+        AsyncOperation AO = SceneManager.LoadSceneAsync("Hexagon_Jonathan"); 
         AO.allowSceneActivation = false;
 
         //frisbee.transform.position = frisbeePlaceToMove;
