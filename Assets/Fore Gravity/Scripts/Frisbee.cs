@@ -71,7 +71,7 @@ public class Frisbee : MonoBehaviour
         }
         else if (introScene) {
             // Frisbee drifts towards player
-            transform.position = Vector3.MoveTowards(transform.position, GameManager.S.player.transform.position, 0.0003f);
+            transform.position = Vector3.MoveTowards(transform.position, GameManager.S.player.transform.position, 0.0008f);
         }
         else if(recalling && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Non-physical recall

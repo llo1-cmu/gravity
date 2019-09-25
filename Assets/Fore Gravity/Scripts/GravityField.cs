@@ -56,9 +56,10 @@ public class GravityField : MonoBehaviour
     }
 
     public void IncreaseGravityField(){
-        GetComponent<SphereCollider>().radius *= increaseFactor;
-        ParticleSystem.ShapeModule shapeModule = transform.GetChild(0).GetComponent <ParticleSystem> ().shape;
+        if (_Collider.radius > 0.2) return;
+        _Collider.radius *= increaseFactor;
 
+        // ParticleSystem.ShapeModule shapeModule = transform.GetChild(0).GetComponent <ParticleSystem> ().shape;
         // Normalize increase of particle system
         // var increase = shapeModule.radius * increaseFactor;
         // var normalized = increase > 1 ? 1/increase : increase;
