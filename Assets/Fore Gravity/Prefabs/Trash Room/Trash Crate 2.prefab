@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5063135138888552721}
   - component: {fileID: 329206046912619499}
   - component: {fileID: 760818557150849841}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trash Crate 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

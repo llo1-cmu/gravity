@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     #pragma warning disable 0649
     private SteamVR_Input_Sources LeftInputSource = SteamVR_Input_Sources.LeftHand;
     private SteamVR_Input_Sources RightInputSource = SteamVR_Input_Sources.RightHand;
-    [SerializeField] private string startScene = "Empty Room";
+    [SerializeField] private string startScene = "Trash Room";
 
     public static GameManager S;
     private static int destroyedObjects = 0;

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8092153454882225994}
   - component: {fileID: 6563125263307700306}
   - component: {fileID: 8724551244258989165}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trash Straight Pipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}

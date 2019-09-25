@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 29883040668707387}
   - component: {fileID: 479133641547412721}
   - component: {fileID: 8734371162910415550}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trash Corner Pipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
