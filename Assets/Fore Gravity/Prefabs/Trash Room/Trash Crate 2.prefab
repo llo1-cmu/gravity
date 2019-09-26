@@ -8,11 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+<<<<<<< HEAD
   - component: {fileID: 7167198558117432785}
   - component: {fileID: 1709226170593064013}
   - component: {fileID: 2312908971071875479}
   m_Layer: 0
   m_Name: Trash_Crate_2_0
+=======
+  - component: {fileID: 3730635921535316844}
+  - component: {fileID: 3728062742523848942}
+  - component: {fileID: 3718631815514389948}
+  - component: {fileID: 3687920705783902032}
+  - component: {fileID: 5063135138888552721}
+  - component: {fileID: 329206046912619499}
+  - component: {fileID: 760818557150849841}
+  m_Layer: 8
+  m_Name: Trash Crate 2
+>>>>>>> 2ee2114f473c117f4fb62b113d6cb550ff473a2a
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

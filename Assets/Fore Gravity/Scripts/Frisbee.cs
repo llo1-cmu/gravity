@@ -71,7 +71,7 @@ public class Frisbee : MonoBehaviour
         }
         else if (introScene) {
             // Frisbee drifts towards player
-            transform.position = Vector3.MoveTowards(transform.position, GameManager.S.player.transform.position, 0.0003f);
+            transform.position = Vector3.MoveTowards(transform.position, GameManager.S.player.transform.position, 0.0008f);
         }
         else if(recalling && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Non-physical recall
@@ -136,9 +136,17 @@ public class Frisbee : MonoBehaviour
     void OnTriggerEnter(Collider other){
         switch(other.tag) {
             case "VR Controller":
-                if (!recalling && !introScene) break;
+                if (!recalling && !(introScene && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource)))) break;
                 // Recall complete, clear all momentum
-                if (introScene) introScene = false;
+                if (introScene){
+                    introScene = false;
+                    if(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource)){
+                        attachedController = rightController;
+                    }
+                    else{
+                        attachedController = leftController;
+                    }
+                }
                 recalling = false;
                 rigidbody.velocity = Vector3.zero;
                 rigidbody.angularVelocity = Vector3.zero;

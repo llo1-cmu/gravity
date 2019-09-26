@@ -8,6 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
+<<<<<<< HEAD
   - component: {fileID: 6229216562500693131}
   - component: {fileID: 7569821172405091140}
   - component: {fileID: 221668864361843141}
@@ -15,6 +16,17 @@ GameObject:
   - component: {fileID: 4965945161204524091}
   m_Layer: 0
   m_Name: Trash_Corner_Pipe
+=======
+  - component: {fileID: 4477288343539968566}
+  - component: {fileID: 4492788274457157850}
+  - component: {fileID: 4503240084350813782}
+  - component: {fileID: 4524504919010459992}
+  - component: {fileID: 29883040668707387}
+  - component: {fileID: 479133641547412721}
+  - component: {fileID: 8734371162910415550}
+  m_Layer: 8
+  m_Name: Trash Corner Pipe
+>>>>>>> 2ee2114f473c117f4fb62b113d6cb550ff473a2a
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

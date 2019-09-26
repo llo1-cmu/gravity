@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Fore Gravity/Scenes/Empty Room.unity
     guid: 6677cda3a585a6f4da09bbd2d388375a
   - enabled: 0
@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Fore Gravity/Scenes/Hexagon_Jonathan.unity
     guid: 7bd6ad0710467b140bc1b863f1ff3e45
+  - enabled: 1
+    path: Assets/Fore Gravity/Scenes/Trash Room.unity
+    guid: b203609f15ddeb64aab240756b465ce1
   m_configObjects: {}

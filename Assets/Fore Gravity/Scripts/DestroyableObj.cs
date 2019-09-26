@@ -8,19 +8,23 @@ public class DestroyableObj : MonoBehaviour
     // Assign frisbee score threshold in inspector
     #pragma warning disable 0649
     [SerializeField] private int threshold;
-    private bool useGravity;
+    private bool rigidBodyExists;
     private Color matColor;
     #pragma warning restore 0649
-
+    Rigidbody rigidbody;
+    Renderer renderer;
     void Start(){
+        rigidbody = GetComponent<Rigidbody>();
+        renderer = GetComponent<Renderer>();
         GameManager.S.AddDestroyableObject();
-        if(GetComponent<Rigidbody>()){
-            useGravity = GetComponent<Rigidbody>().useGravity;
+        if(rigidbody){
+            rigidBodyExists = true;
+            rigidbody.useGravity = true;
         }
         else{
-            useGravity = false;
+            rigidBodyExists = false;
         }
-        matColor = GetComponent<Renderer>().material.color;
+        matColor = renderer.material.color;
     }
 
     public int GetThreshold(){
@@ -35,16 +39,18 @@ public class DestroyableObj : MonoBehaviour
         }
 
         // Suspend enviornmental gravity when being pulled by the frisbee
-        if (other.tag == "gravity field" && useGravity) {
+        if (other.tag == "gravity field" && rigidBodyExists && GameManager.S.GetDestroyedScore() >= threshold) {
             //TODO: add cooler shader effect here
-            this.GetComponent<Renderer>().material.color = Color.black;
-            GetComponent<Rigidbody>().useGravity = false;
+            this.renderer.material.color = Color.black;
+            rigidbody.useGravity = false;
+            rigidbody.isKinematic = false;
         }
     }
     void OnTriggerExit(Collider other){
-        if (other.tag == "gravity field" && useGravity) {
-            this.GetComponent<Renderer>().material.color = matColor;
-            GetComponent<Rigidbody>().useGravity = true;
+        if (other.tag == "gravity field" && rigidBodyExists && GameManager.S.GetDestroyedScore() >= threshold) {
+            this.renderer.material.color = matColor;
+            rigidbody.useGravity = true;
+            rigidbody.isKinematic = true;
         }
     }
 
