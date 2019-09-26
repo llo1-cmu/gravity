@@ -138,39 +138,7 @@ public class Frisbee : MonoBehaviour
             case "VR Controller":
                 if (!recalling && !(introScene && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource)))) break;
                 // Recall complete, clear all momentum
-                if (introScene){
-                    introScene = false;
-                    if(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource)){
-                        attachedController = rightController;
-                    }
-                    else{
-                        attachedController = leftController;
-                    }
-                }
-                recalling = false;
-                rigidbody.velocity = Vector3.zero;
-                rigidbody.angularVelocity = Vector3.zero;
-                rigidbody.isKinematic = true;
-                transform.SetParent(attachedController, false);
-                transform.position = attachedController.position;
-                transform.rotation = attachedController.rotation;
-                // Velocity is not calculated by VelocityEstimator
-                velocityEstimator.BeginEstimatingVelocity();
-                audioSource.PlayOneShot(catchSound);
-                FrisbeeSphere.material = originalMaterial;
-                gravityField.SetActive(false);
-
-                if(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource)){
-                    vibration.Execute(0.0f, 0.3f, 160.0f, 1.0f, RightInputSource);
-                }
-                else if(SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource)){
-                    vibration.Execute(0.0f, 0.3f, 160.0f, 1.0f, LeftInputSource);
-                }
-
-                if(Tutorial.IsTutorial() && !firstCaughtPlayed){
-                    Tutorial.PlayFrisbeeCaught();
-                    firstCaughtPlayed = true;
-                }
+                RecallEffect();
                 break;
             case "Target Plane":
                 SaveData.DataSave(frisbeePositions, 1);
@@ -192,34 +160,52 @@ public class Frisbee : MonoBehaviour
         // }
     }
 
-    /*void OnTriggerStay(Collider other){
-        if(other.tag == "VR Controller"){
-            // If someone grabs the frisbee with either hand
-            if( (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) && attachedController == rightController)
-                || (SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource) && attachedController == leftController) )
-            {
-                // Move frisbee based on controller's position
-                rigidbody.MovePosition(attachedController.position + (Vector3.Scale(attachedController.forward, Vector3.one * 0.2f)));
-                // Rotate the frisbee to fit hand gesture
-                rigidbody.MoveRotation(attachedController.rotation);
+    void RecallEffect(){
+        if (introScene){
+            introScene = false;
+            if(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource)){
+                attachedController = rightController;
             }
-            else if (attachedController != null){ // If frisbee is on hand but not grabbed (being thrown)
-                frisbeePositions = new List<Vector3>();
-                frisbeePositions.Add(transform.position);
-                recordingPos = true;
-
-                attachedController = null;
-                rigidbody.useGravity = true;
-                // Apply velocity estimated by VelocityEstimator
-                velocityEstimator.FinishEstimatingVelocity();
-                rigidbody.velocity = velocityEstimator.GetVelocityEstimate();
-                rigidbody.angularVelocity = ScaleLocalAngularVelocity(velocityEstimator.GetAngularVelocityEstimate(), new Vector3(0.1f, 1.0f, 0.1f));
-
-                audioSource.PlayOneShot(throwSound);
-                gravityField.SetActive(true);
+            else{
+                attachedController = leftController;
             }
         }
-    }*/
+        recalling = false;
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.angularVelocity = Vector3.zero;
+        rigidbody.isKinematic = true;
+        transform.SetParent(attachedController, false);
+        transform.position = attachedController.position;
+        transform.rotation = attachedController.rotation;
+        // Velocity is not calculated by VelocityEstimator
+        velocityEstimator.BeginEstimatingVelocity();
+        audioSource.PlayOneShot(catchSound);
+        FrisbeeSphere.material = originalMaterial;
+        gravityField.SetActive(false);
+
+        if(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource)){
+            vibration.Execute(0.0f, 0.3f, 160.0f, 1.0f, RightInputSource);
+        }
+        else if(SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource)){
+            vibration.Execute(0.0f, 0.3f, 160.0f, 1.0f, LeftInputSource);
+        }
+
+        if(Tutorial.IsTutorial() && !firstCaughtPlayed){
+            Tutorial.PlayFrisbeeCaught();
+            firstCaughtPlayed = true;
+        }
+    }
+
+    void OnTriggerStay(Collider other){
+        if(other.tag == "VR Controller"){
+            // If someone grabs the frisbee with either hand
+            if( (recalling || introScene)
+                && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource) ))
+            {
+                RecallEffect();
+            }
+        }
+    }
     /*void OnTriggerExit(Collider other){
         if(attachedController != null && rigidbody.useGravity == false){
             // Recall the frisbee if it accidentally leaves the hand.
@@ -237,7 +223,13 @@ public class Frisbee : MonoBehaviour
     }
 
     void FixedUpdate(){
-        rigidbody.angularVelocity = ScaleLocalAngularVelocity(rigidbody.angularVelocity, new Vector3(0.9f, 0.999f, 0.9f));
+        Vector3 newAngularVelocity = ScaleLocalAngularVelocity(rigidbody.angularVelocity, new Vector3(0.9f, 0.999f, 0.9f));
+        if(float.IsNaN(newAngularVelocity.x)){
+            print("Current angular velocity is " + rigidbody.angularVelocity.ToString("f4") + " when NaN happened");
+        }
+        else{
+            rigidbody.angularVelocity = newAngularVelocity;
+        }
     }
 
     Vector3 ScaleLocalAngularVelocity(Vector3 angularVelocity, Vector3 scaleVector){
