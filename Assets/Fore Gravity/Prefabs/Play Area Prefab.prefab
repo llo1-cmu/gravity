@@ -10320,6 +10320,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2716453685655884675}
     m_Modifications:
+    - target: {fileID: 146900, guid: 4d293c8e162f3874b982baadd71153d2, type: 3}
+      propertyPath: m_Name
+      value: '[CameraRig]'
+      objectReference: {fileID: 0}
     - target: {fileID: 420908, guid: 4d293c8e162f3874b982baadd71153d2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10364,10 +10368,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 146900, guid: 4d293c8e162f3874b982baadd71153d2, type: 3}
-      propertyPath: m_Name
-      value: '[CameraRig]'
-      objectReference: {fileID: 0}
     - target: {fileID: 124034, guid: 4d293c8e162f3874b982baadd71153d2, type: 3}
       propertyPath: m_TagString
       value: VR Controller
@@ -10384,12 +10384,12 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 4110680887867235645, guid: 4d293c8e162f3874b982baadd71153d2,
+    - target: {fileID: 4374300369485210452, guid: 4d293c8e162f3874b982baadd71153d2,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4374300369485210452, guid: 4d293c8e162f3874b982baadd71153d2,
+    - target: {fileID: 4110680887867235645, guid: 4d293c8e162f3874b982baadd71153d2,
         type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -10439,6 +10439,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4556048181399007208}
     m_Modifications:
+    - target: {fileID: 1000013597184258, guid: 057574477c20401448aba7c848873712, type: 3}
+      propertyPath: m_Name
+      value: vr_glove_left
+      objectReference: {fileID: 0}
     - target: {fileID: 4000013477813392, guid: 057574477c20401448aba7c848873712, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.5675945
@@ -10482,10 +10486,6 @@ PrefabInstance:
     - target: {fileID: 4000013477813392, guid: 057574477c20401448aba7c848873712, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1000013597184258, guid: 057574477c20401448aba7c848873712, type: 3}
-      propertyPath: m_Name
-      value: vr_glove_left
       objectReference: {fileID: 0}
     - target: {fileID: 114000010158459022, guid: 057574477c20401448aba7c848873712,
         type: 3}
@@ -10587,6 +10587,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 5734414120425621157, guid: 6bd8c0068373db547b722d4ce6b5c4f0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 11b050e661ec0cf48a289a7266451e91, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6bd8c0068373db547b722d4ce6b5c4f0, type: 3}
 --- !u!23 &8119689876843745518 stripped
@@ -10614,6 +10619,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4556048181399007208}
     m_Modifications:
+    - target: {fileID: 1000010184414672, guid: 5dc81ef5cae96304586abbc6e4b5beb8, type: 3}
+      propertyPath: m_Name
+      value: vr_glove_right
+      objectReference: {fileID: 0}
     - target: {fileID: 4000011683143748, guid: 5dc81ef5cae96304586abbc6e4b5beb8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.27642667
@@ -10657,10 +10666,6 @@ PrefabInstance:
     - target: {fileID: 4000011683143748, guid: 5dc81ef5cae96304586abbc6e4b5beb8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1000010184414672, guid: 5dc81ef5cae96304586abbc6e4b5beb8, type: 3}
-      propertyPath: m_Name
-      value: vr_glove_right
       objectReference: {fileID: 0}
     - target: {fileID: 114000011652895316, guid: 5dc81ef5cae96304586abbc6e4b5beb8,
         type: 3}
