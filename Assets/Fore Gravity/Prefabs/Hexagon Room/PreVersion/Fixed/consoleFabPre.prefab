@@ -16,6 +16,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &1358046354036422396
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2642521392035822298}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.6505132, y: 1.4542465, z: 0.9913857}
+  m_Center: {x: 0.41103363, y: 0.18658161, z: -0.020151034}
 --- !u!65 &7692295622702634266
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27,8 +40,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.5820808, y: 1.4272556, z: 1.7287527}
-  m_Center: {x: 0.49994287, y: 0.24692678, z: -0.034174383}
+  m_Size: {x: 1.5820808, y: 1.4272556, z: 0.95650834}
+  m_Center: {x: 0.4999429, y: 0.24692678, z: -0.016922563}
 --- !u!114 &2091923920529190897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52,7 +65,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: f608ea021a8d34d598f073da6df1c801,
         type: 3}
       propertyPath: m_Name
-      value: consolePre
+      value: consoleFabPre
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: f608ea021a8d34d598f073da6df1c801,
         type: 3}

@@ -1,19 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!136 &9197958081569759439
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 344308620802468871}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 1.8659058
-  m_Height: 7.036477
-  m_Direction: 0
-  m_Center: {x: 2.8237233, y: 1.4238853, z: 24.76875}
 --- !u!54 &971568150555517290
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -25,8 +11,8 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -43,6 +29,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 25
+--- !u!65 &8312857082443370949
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344308620802468871}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.746149, y: 2.1333551, z: 3.082405}
+  m_Center: {x: 2.875822, y: 0.8706908, z: 24.410477}
+--- !u!65 &3569828113939261748
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344308620802468871}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.77765, y: 1.9162984, z: 2.8820305}
+  m_Center: {x: 2.6398726, y: 1.1618521, z: 24.477942}
 --- !u!1001 &8639830204753540366
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -55,11 +67,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: centerGenPr
       objectReference: {fileID: 0}
-    - target: {fileID: -4716039839386942834, guid: c057c9d166f4047d0b8fb31bf90b65ce,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 79bf7ae28ff43cc4ca939f5652f4d38b, type: 2}
     - target: {fileID: -4216859302048453862, guid: c057c9d166f4047d0b8fb31bf90b65ce,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -115,6 +122,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4716039839386942834, guid: c057c9d166f4047d0b8fb31bf90b65ce,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 79bf7ae28ff43cc4ca939f5652f4d38b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c057c9d166f4047d0b8fb31bf90b65ce, type: 3}
 --- !u!1 &344308620802468871 stripped
