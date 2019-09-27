@@ -23,7 +23,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5694022252316499663}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: f7810a6668dd76147902e5250256a160, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -66,6 +66,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: 2ndFlooringPre
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: cacb982bfd2264cce9c7635b11b5e8fe,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: cacb982bfd2264cce9c7635b11b5e8fe,
         type: 3}

@@ -81,6 +81,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ReactorPre
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: ae88e01ee29874a8c8cf48eb252c91de,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae88e01ee29874a8c8cf48eb252c91de,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -67,6 +67,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: smallerSidePre
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: d4d28fd1704be401e9d4141492a6b2ce,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: d4d28fd1704be401e9d4141492a6b2ce,
         type: 3}
       propertyPath: m_LocalPosition.x

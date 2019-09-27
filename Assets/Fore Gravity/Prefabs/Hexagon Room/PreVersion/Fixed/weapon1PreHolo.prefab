@@ -12,6 +12,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: weapon1PreHolo
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: abe1b1d0630e049fbb4c9f57b4e82e4e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: -8884186758120481105, guid: abe1b1d0630e049fbb4c9f57b4e82e4e,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

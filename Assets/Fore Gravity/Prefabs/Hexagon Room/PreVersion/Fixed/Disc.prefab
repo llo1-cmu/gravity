@@ -12,6 +12,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Disc
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 6bd8c0068373db547b722d4ce6b5c4f0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 6bd8c0068373db547b722d4ce6b5c4f0,
         type: 3}
       propertyPath: m_LocalPosition.x

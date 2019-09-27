@@ -36,7 +36,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4478204418219529581}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: f7810a6668dd76147902e5250256a160, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -66,6 +66,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: weapon1Pre
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: abe1b1d0630e049fbb4c9f57b4e82e4e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: abe1b1d0630e049fbb4c9f57b4e82e4e,
         type: 3}

@@ -20,9 +20,9 @@ public class DestroyableObj : MonoBehaviour
         GameManager.S.AddDestroyableObject();
         if(rigidbody){
             rigidBodyExists = true;
-            if(rigidbody.useGravity){
+            //if(rigidbody.useGravity){
                 useGravity = true;
-            }
+            //}
         }
         else{
             rigidBodyExists = false;
