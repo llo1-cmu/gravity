@@ -8,19 +8,28 @@ public class DestroyableObj : MonoBehaviour
     // Assign frisbee score threshold in inspector
     #pragma warning disable 0649
     [SerializeField] private int threshold;
+    private bool rigidBodyExists;
     private bool useGravity;
     private Color matColor;
     #pragma warning restore 0649
-
+    new Rigidbody rigidbody;
+    new Renderer renderer;
     void Start(){
+        rigidbody = GetComponent<Rigidbody>();
+        renderer = GetComponent<Renderer>();
         GameManager.S.AddDestroyableObject();
-        if(GetComponent<Rigidbody>()){
-            useGravity = GetComponent<Rigidbody>().useGravity;
+        if(rigidbody){
+            rigidBodyExists = true;
+            //if(rigidbody.useGravity){
+                useGravity = true;
+            //}
         }
         else{
-            useGravity = false;
+            rigidBodyExists = false;
         }
-        matColor = GetComponent<Renderer>().material.color;
+        if(renderer){
+            matColor = renderer.material.color;
+        }
     }
 
     public int GetThreshold(){
@@ -35,16 +44,28 @@ public class DestroyableObj : MonoBehaviour
         }
 
         // Suspend enviornmental gravity when being pulled by the frisbee
-        if (other.tag == "gravity field" && useGravity) {
+        if (other.tag == "gravity field" && rigidBodyExists && GameManager.S.GetDestroyedScore() >= threshold) {
             //TODO: add cooler shader effect here
-            this.GetComponent<Renderer>().material.color = Color.black;
-            GetComponent<Rigidbody>().useGravity = false;
+            if(renderer){
+                renderer.material.color = Color.black;
+            }
+            if(useGravity){
+                rigidbody.useGravity = false;
+            }
+            rigidbody.isKinematic = true;
+            rigidbody.detectCollisions = false;
         }
     }
     void OnTriggerExit(Collider other){
-        if (other.tag == "gravity field" && useGravity) {
-            this.GetComponent<Renderer>().material.color = matColor;
-            GetComponent<Rigidbody>().useGravity = true;
+        if (other.tag == "gravity field" && rigidBodyExists && GameManager.S.GetDestroyedScore() >= threshold) {
+            if(renderer){
+                matColor = renderer.material.color;
+            }
+            if(useGravity){
+                rigidbody.useGravity = true;
+            }
+            rigidbody.isKinematic = false;
+            rigidbody.detectCollisions = true;
         }
     }
 

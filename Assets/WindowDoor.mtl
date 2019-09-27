@@ -1,0 +1,12 @@
+newmtl Gray_snaps002
+Kd 0.4980391 0.4980391 0.4980391
+d 1
+
+newmtl LightBlue_snaps002
+Kd 0.2122642 0.4787914 1
+d 1
+
+newmtl DarkGray_snaps002
+Kd 0.2452829 0.244126 0.244126
+d 1
+

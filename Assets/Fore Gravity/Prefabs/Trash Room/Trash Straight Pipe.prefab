@@ -9,7 +9,17 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2294385961491095788}
+<<<<<<< HEAD
   m_Layer: 0
+=======
+  - component: {fileID: 2283701851839371832}
+  - component: {fileID: 2276211697030716490}
+  - component: {fileID: 2243473971096628440}
+  - component: {fileID: 8092153454882225994}
+  - component: {fileID: 6563125263307700306}
+  - component: {fileID: 8724551244258989165}
+  m_Layer: 8
+>>>>>>> 2ee2114f473c117f4fb62b113d6cb550ff473a2a
   m_Name: Trash Straight Pipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}

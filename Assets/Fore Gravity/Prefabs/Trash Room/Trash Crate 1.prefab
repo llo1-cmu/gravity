@@ -9,7 +9,17 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3974157732943081881}
+<<<<<<< HEAD
   m_Layer: 0
+=======
+  - component: {fileID: 3985842781993046049}
+  - component: {fileID: 3997301926897318645}
+  - component: {fileID: 4021387776052141699}
+  - component: {fileID: 1313689806057636056}
+  - component: {fileID: 2287665268214079321}
+  - component: {fileID: 3342032385531229460}
+  m_Layer: 8
+>>>>>>> 2ee2114f473c117f4fb62b113d6cb550ff473a2a
   m_Name: Trash Crate 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
