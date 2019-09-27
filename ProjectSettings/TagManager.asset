@@ -4,13 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - VR Controller
   - projectile
-  - FxTemporaire
-  - Frisbee
-  - Target Plane
-  - UI Button
   - gravity field
+  - Frisbee
+  - VR Controller
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
@@ -20,7 +18,7 @@ TagManager:
   - UI
   - 
   - 
-  - DestroyableObjects
+  - 
   - 
   - 
   - 
