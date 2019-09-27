@@ -48,7 +48,7 @@
         {
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = abs(c.rgb * sin(10 * IN.worldPos.x));
+            o.Albedo = 0.2 * (c.rgb * (sin (5 *(IN.worldPos.x+IN.worldPos.y+IN.worldPos.z)) - 0.5));
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
