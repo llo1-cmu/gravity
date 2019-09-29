@@ -11,6 +11,10 @@ public class DestroyableObj : MonoBehaviour
     private bool rigidBodyExists;
     private bool useGravity;
     private Color matColor;
+    private Vector3 originalScale;
+    private bool beingDestroyed;
+    private Transform frisbee;
+    private Vector3 originalPosition;
     #pragma warning restore 0649
     new Rigidbody rigidbody;
     new Renderer renderer;
@@ -20,8 +24,10 @@ public class DestroyableObj : MonoBehaviour
         GameManager.S.AddDestroyableObject();
         if(rigidbody){
             rigidBodyExists = true;
+            //rigidbody.isKinematic = false;
+            //rigidbody.useGravity = true;
             //if(rigidbody.useGravity){
-                useGravity = true;
+            //    useGravity = true;
             //}
         }
         else{
@@ -30,72 +36,93 @@ public class DestroyableObj : MonoBehaviour
         if(renderer){
             matColor = renderer.material.color;
         }
+        originalScale = transform.localScale;
     }
 
     public int GetThreshold(){
         return threshold;
     }
 
-    void OnTriggerStay(Collider other) {
-        if (other.tag != "Frisbee") return;
+    // void OnTriggerStay(Collider other) {
+    //     if (other.tag != "gravity field") return;
 
-        // If we are strong enough to pick up the other object
-        if (GameManager.S.GetDestroyedScore() >= threshold) {
-            // transform.parent = other.transform;
-            // Vector faces towards the center of the gravity field
-            var vec = other.transform.position - transform.position;
+    //     // If we are strong enough to pick up the other object
+    //     if (GameManager.S.GetDestroyedScore() >= threshold && !beingDestroyed) {
+    //         // transform.parent = other.transform;
+    //         // Vector faces towards the center of the gravity field
+    //         // var vec = other.transform.position - transform.position;
 
-            // Normalize the magnitude b/w 0 and 1 to put on the force curve
-            // float normDist = Mathf.Clamp01(vec.magnitude / _Collider.radius);
-            //if (vec.magnitude > _Collider.radius) normDist = 1;
+    //         // Normalize the magnitude b/w 0 and 1 to put on the force curve
+    //         // float normDist = Mathf.Clamp01(vec.magnitude / _Collider.radius);
+    //         //if (vec.magnitude > _Collider.radius) normDist = 1;
 
-            // Moves based on time and not distance
-            transform.position = Vector3.MoveTowards(transform.position, other.transform.position, Time.deltaTime * 5);
+    //         // Moves based on time and not distance
+    //         // transform.position = Vector3.MoveTowards(transform.position, other.transform.position, Time.deltaTime * 5);
 
-            // Decrease other object's size exponentially
-            // TODO: why does size increase?
-            if (vec.magnitude < 1f && vec.magnitude > 0.05f && other.transform.localScale.magnitude > 0.001f) {
-                other.transform.localScale *= vec.magnitude;
-            }
-        }
-    }
+    //         // Decrease other object's size exponentially
+    //         // TODO: why does size increase?
+    //         // if (vec.magnitude < 1f && vec.magnitude > 0.05f && other.transform.localScale.magnitude > 0.001f) {
+    //         //     other.transform.localScale *= vec.magnitude;
+    //         // }
+
+    //         // Moved moving and shrinking into the coroutine
+            
+    //     }
+    // }
 
     void OnTriggerEnter(Collider other){
         // Once object gets close enough to touch frisbee, destroy it
-        if (other.tag == "Frisbee") {
-            other.GetComponentInParent<Frisbee>().IncreaseGravityField();
-            if (GameManager.S.GetDestroyedScore() >= threshold) StartCoroutine(DisappearEffect(0.25f));
-        }
+        // if (other.tag == "Frisbee") {
+        //     other.GetComponentInParent<Frisbee>().IncreaseGravityField();
+        //     if (GameManager.S.GetDestroyedScore() >= threshold) StartCoroutine(DisappearEffect(0.25f));
+        // }
 
         // Suspend enviornmental gravity when being pulled by the frisbee
-        if (other.tag == "gravity field" && rigidBodyExists && GameManager.S.GetDestroyedScore() >= threshold) {
+        if (other.tag == "gravity field" && GameManager.S.GetDestroyedScore() >= threshold) {
+            if(rigidBodyExists)
             //TODO: add cooler shader effect here
-            if(renderer){
-                renderer.material.color = Color.black;
+            // if(renderer){
+            //     renderer.material.color = Color.black;
+            // }
+            if(rigidBodyExists){
+                if(useGravity){
+                    rigidbody.useGravity = false;
+                }
+                rigidbody.isKinematic = true;
+                //rigidbody.detectCollisions = false;
             }
-            if(useGravity){
-                rigidbody.useGravity = false;
-            }
-            rigidbody.isKinematic = true;
-            rigidbody.detectCollisions = false;
-        }
-    }
-    void OnTriggerExit(Collider other){
-        if (other.tag == "gravity field" && rigidBodyExists && GameManager.S.GetDestroyedScore() >= threshold) {
-            if(renderer){
-                matColor = renderer.material.color;
-            }
-            if(useGravity){
-                rigidbody.useGravity = true;
-            }
-            rigidbody.isKinematic = false;
-            rigidbody.detectCollisions = true;
+
+            frisbee = other.transform;
+            originalPosition = transform.position;
+            beingDestroyed = true;
+            StartCoroutine(DisappearEffect(0.5f));
         }
     }
 
+    // Don't let it exit for now
+    // void OnTriggerExit(Collider other){
+    //     if (other.tag == "gravity field" && rigidBodyExists && GameManager.S.GetDestroyedScore() >= threshold) {
+    //         if(renderer){
+    //             matColor = renderer.material.color;
+    //         }
+    //         if(useGravity){
+    //             rigidbody.useGravity = true;
+    //         }
+    //         rigidbody.isKinematic = false;
+    //         rigidbody.detectCollisions = true;
+    //     }
+    // }
+
     IEnumerator DisappearEffect(float timeToWait) {
+        float startTime = Time.time;
         // TODO: update shaders to dissolve
-        yield return new WaitForSeconds(timeToWait);
+        //yield return new WaitForSeconds(timeToWait);
+        while(Time.time - startTime < timeToWait){
+            transform.position = Vector3.Lerp(originalPosition, frisbee.position, (Time.time-startTime)/timeToWait);
+            transform.localScale = originalScale * (1f - Mathf.Pow((Time.time-startTime)/timeToWait, 2f) );
+            yield return null;
+        }
+
         GameManager.S.UpdateDestroyedScore();
         Destroy(gameObject);
     }
