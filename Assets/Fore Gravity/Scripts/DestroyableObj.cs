@@ -36,6 +36,30 @@ public class DestroyableObj : MonoBehaviour
         return threshold;
     }
 
+    void OnTriggerStay(Collider other) {
+        if (other.tag != "Frisbee") return;
+
+        // If we are strong enough to pick up the other object
+        if (GameManager.S.GetDestroyedScore() >= threshold) {
+            // transform.parent = other.transform;
+            // Vector faces towards the center of the gravity field
+            var vec = other.transform.position - transform.position;
+
+            // Normalize the magnitude b/w 0 and 1 to put on the force curve
+            // float normDist = Mathf.Clamp01(vec.magnitude / _Collider.radius);
+            //if (vec.magnitude > _Collider.radius) normDist = 1;
+
+            // Moves based on time and not distance
+            transform.position = Vector3.MoveTowards(transform.position, other.transform.position, Time.deltaTime * 5);
+
+            // Decrease other object's size exponentially
+            // TODO: why does size increase?
+            if (vec.magnitude < 1f && vec.magnitude > 0.05f && other.transform.localScale.magnitude > 0.001f) {
+                other.transform.localScale *= vec.magnitude;
+            }
+        }
+    }
+
     void OnTriggerEnter(Collider other){
         // Once object gets close enough to touch frisbee, destroy it
         if (other.tag == "Frisbee") {

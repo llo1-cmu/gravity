@@ -21,39 +21,39 @@ public class GravityField : MonoBehaviour
         _Collider.isTrigger = true;
     }
 
-    void OnTriggerStay(Collider other) {
-        var destObj = other.GetComponent<DestroyableObj>();
-        if (destObj == null)
-        {
-            return;
-        }
+    // void OnTriggerStay(Collider other) {
+    //     var destObj = other.GetComponent<DestroyableObj>();
+    //     if (destObj == null)
+    //     {
+    //         return;
+    //     }
 
-        int threshold = destObj.GetThreshold();
+    //     int threshold = destObj.GetThreshold();
 
-        // If other object is not in Destroyable Object layer (8)
-        if ((_ObjectMask.value & (1 << other.gameObject.layer)) == 0)
-        {
-            return;
-        }
+    //     // If other object is not in Destroyable Object layer (8)
+    //     if ((_ObjectMask.value & (1 << other.gameObject.layer)) == 0)
+    //     {
+    //         return;
+    //     }
 
-        // If we are strong enough to pick up the other object
-        if (GameManager.S.GetDestroyedScore() >= threshold) {
-            // Vector faces towards the center of the gravity field
-            var vec = transform.position - other.transform.position;
+    //     // If we are strong enough to pick up the other object
+    //     if (GameManager.S.GetDestroyedScore() >= threshold) {
+    //         // Vector faces towards the center of the gravity field
+    //         // var vec = transform.position - other.transform.position;
 
-            // Normalize the magnitude b/w 0 and 1 to put on the force curve
-            float normDist = Mathf.Clamp01(vec.magnitude / _Collider.radius);
-            //if (vec.magnitude > _Collider.radius) normDist = 1;
+    //         // Normalize the magnitude b/w 0 and 1 to put on the force curve
+    //         // float normDist = Mathf.Clamp01(vec.magnitude / _Collider.radius);
+    //         //if (vec.magnitude > _Collider.radius) normDist = 1;
 
-            other.transform.position = Vector3.MoveTowards(other.transform.position, this.transform.position, _ForceCurve.Evaluate(normDist) * _MaxForce);
+    //         other.transform.position = Vector3.MoveTowards(other.transform.position, this.transform.position, Time.deltaTime * _MaxForce);
 
-            // Decrease other object's size exponentially
-            // TODO: why does size increase?
-            if (vec.magnitude < 1f && vec.magnitude > 0.05f && other.transform.localScale.magnitude > 0.001f) {
-                other.transform.localScale *= vec.magnitude;
-            }
-        }
-    }
+    //         // Decrease other object's size exponentially
+    //         // TODO: why does size increase?
+    //         // if (vec.magnitude < 1f && vec.magnitude > 0.05f && other.transform.localScale.magnitude > 0.001f) {
+    //             // other.transform.localScale *= vec.magnitude;
+    //         // }
+    //     }
+    // }
 
     public void IncreaseGravityField(){
         if (_Collider.radius > 0.2) return;
