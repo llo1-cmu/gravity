@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     #pragma warning disable 0649
     private SteamVR_Input_Sources LeftInputSource = SteamVR_Input_Sources.LeftHand;
     private SteamVR_Input_Sources RightInputSource = SteamVR_Input_Sources.RightHand;
-    [SerializeField] private string startScene = "Trash Room";
+    [SerializeField] private string startScene = "Big Trash Room";
 
     public static GameManager S;
     private static int destroyedObjects = 0;
@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
         //GetComponent<SteamVR_LoadLevel>().Trigger();
         yield return new WaitForSeconds(7);
         Application.backgroundLoadingPriority = ThreadPriority.Low;
-        AsyncOperation AO = SceneManager.LoadSceneAsync("Hexagon_Jonathan"); 
+        AsyncOperation AO = SceneManager.LoadSceneAsync("Hexagon_Lisa"); 
         AO.allowSceneActivation = false;
 
         //frisbee.transform.position = frisbeePlaceToMove;

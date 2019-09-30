@@ -96,6 +96,7 @@ public class DestroyableObj : MonoBehaviour
             originalPosition = transform.position;
             beingDestroyed = true;
             StartCoroutine(DisappearEffect(0.5f));
+            frisbee.GetComponent<Frisbee>().IncreaseGravityField();
         }
     }
 

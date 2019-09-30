@@ -10,8 +10,13 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 86d12b860035a504eb404cf8f71c3337,
         type: 3}
       propertyPath: m_Name
-      value: Gen_Wall_snaps2
+      value: ptrwall
       objectReference: {fileID: 0}
+    - target: {fileID: -5619805296377254648, guid: 86d12b860035a504eb404cf8f71c3337,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cab2b2761f1067d41a34213af27b5d7f, type: 2}
     - target: {fileID: -4216859302048453862, guid: 86d12b860035a504eb404cf8f71c3337,
         type: 3}
       propertyPath: m_LocalPosition.x
