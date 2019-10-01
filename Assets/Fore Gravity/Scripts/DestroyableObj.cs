@@ -70,7 +70,7 @@ public class DestroyableObj : MonoBehaviour
     //     }
     // }
 
-    void OnTriggerEnter(Collider other){
+    void OnTriggerEnter(Collider other) {
         // Once object gets close enough to touch frisbee, destroy it
         // if (other.tag == "Frisbee") {
         //     other.GetComponentInParent<Frisbee>().IncreaseGravityField();

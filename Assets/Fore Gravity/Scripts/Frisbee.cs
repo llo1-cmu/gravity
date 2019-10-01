@@ -40,10 +40,10 @@ public class Frisbee : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         velocityEstimator = GetComponent<Valve.VR.InteractionSystem.VelocityEstimator>();
         audioSource = GetComponent<AudioSource>();
-        if(Tutorial.IsTutorial()){
-            Tutorial.PlayFrisbeePrompt();
+        // if(Tutorial.IsTutorial()){
+            SoundManager.instance.PlayFrisbeePrompt();
             introScene = true;
-        }
+        // }
     }
 
     void Update()
@@ -72,6 +72,9 @@ public class Frisbee : MonoBehaviour
         else if (introScene) {
             // Frisbee drifts towards player
             transform.position = Vector3.MoveTowards(transform.position, GameManager.S.player.transform.position, 0.0008f);
+            if (!SoundManager.instance.IsPlaying()) {
+                SoundManager.instance.PlayFrisbeePrompt();
+            }
         }
         else if(recalling && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Non-physical recall
@@ -127,8 +130,8 @@ public class Frisbee : MonoBehaviour
             gravityField.SetActive(true);
         }
 
-        if(!firstSphereHit && Tutorial.IsTutorial() && GameManager.S.GetDestroyedScore() > 0){
-            Tutorial.PlaySphereHit();
+        if(!firstSphereHit /*&& Tutorial.IsTutorial()*/ && GameManager.S.GetDestroyedScore() > 0){
+            SoundManager.instance.PlaySphereHit();
             firstSphereHit = true;
         }
     }
@@ -190,8 +193,8 @@ public class Frisbee : MonoBehaviour
             vibration.Execute(0.0f, 0.3f, 160.0f, 1.0f, LeftInputSource);
         }
 
-        if(Tutorial.IsTutorial() && !firstCaughtPlayed){
-            Tutorial.PlayFrisbeeCaught();
+        if(/*Tutorial.IsTutorial() &&*/ !firstCaughtPlayed){
+            SoundManager.instance.PlayFrisbeeCaught();
             firstCaughtPlayed = true;
         }
     }
