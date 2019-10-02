@@ -12,23 +12,18 @@ public class DestroyableObj : MonoBehaviour
     private bool useGravity;
     private Color matColor;
     private Vector3 originalScale;
-    private bool beingDestroyed;
     private Transform frisbee;
     private Vector3 originalPosition;
     #pragma warning restore 0649
     new Rigidbody rigidbody;
     new Renderer renderer;
+    
     void Start(){
         rigidbody = GetComponent<Rigidbody>();
         renderer = GetComponent<Renderer>();
         GameManager.S.AddDestroyableObject();
         if(rigidbody){
             rigidBodyExists = true;
-            //rigidbody.isKinematic = false;
-            //rigidbody.useGravity = true;
-            //if(rigidbody.useGravity){
-            //    useGravity = true;
-            //}
         }
         else{
             rigidBodyExists = false;
@@ -70,7 +65,7 @@ public class DestroyableObj : MonoBehaviour
     //     }
     // }
 
-    void OnTriggerEnter(Collider other){
+    void OnTriggerEnter(Collider other) {
         // Once object gets close enough to touch frisbee, destroy it
         // if (other.tag == "Frisbee") {
         //     other.GetComponentInParent<Frisbee>().IncreaseGravityField();
@@ -94,9 +89,18 @@ public class DestroyableObj : MonoBehaviour
 
             frisbee = other.transform;
             originalPosition = transform.position;
-            beingDestroyed = true;
+
+            SoundManager.instance.PlayAbsorb();
             StartCoroutine(DisappearEffect(0.5f));
             frisbee.GetComponent<Frisbee>().IncreaseGravityField();
+        }
+
+        // Play fail-to-absorb sound if we haven't already
+        else if (other.tag == "gravity field" && GameManager.S.GetDestroyedScore() < threshold) {
+            GravityField gf = other.GetComponent<GravityField>();
+            if (gf.firstItemFailed) return;
+            gf.firstItemFailed = true;
+            SoundManager.instance.PlayItemFail();
         }
     }
 

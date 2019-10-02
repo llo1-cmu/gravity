@@ -6,13 +6,14 @@ using UnityEngine;
 public class GravityField : MonoBehaviour
 {
     #pragma warning disable 0649
-    [SerializeField] private AnimationCurve _ForceCurve;
-    [SerializeField] private float _MaxForce = 0.5f;
-    [SerializeField] private LayerMask _ObjectMask = 1 << 8;
+    // [SerializeField] private AnimationCurve _ForceCurve;
+    // [SerializeField] private float _MaxForce = 0.5f;
+    // [SerializeField] private LayerMask _ObjectMask = 1 << 8;
     [SerializeField] private float increaseFactor = 1.1f;
-    [SerializeField] private float maxParticleSize = 0.1f;
+    // [SerializeField] private float maxParticleSize = 0.1f;
     #pragma warning restore 0649
 
+    public bool firstItemFailed = false;
     private SphereCollider _Collider;
 
     private void Start()
