@@ -8,6 +8,7 @@ public class DestroyableObj : MonoBehaviour
     // Assign frisbee score threshold in inspector
     #pragma warning disable 0649
     [SerializeField] private int threshold;
+    [SerializeField] private int pointValue = 5;
     private bool rigidBodyExists;
     private bool useGravity;
     private Color matColor;
@@ -21,7 +22,7 @@ public class DestroyableObj : MonoBehaviour
     void Start(){
         rigidbody = GetComponent<Rigidbody>();
         renderer = GetComponent<Renderer>();
-        GameManager.S.AddDestroyableObject();
+        GameManager.S.AddDestroyableObject(pointValue);
         if(rigidbody){
             rigidBodyExists = true;
         }
@@ -36,6 +37,14 @@ public class DestroyableObj : MonoBehaviour
 
     public int GetThreshold(){
         return threshold;
+    }
+
+    void Update() {
+        if (GameManager.S.GetBroadcastGravityDisabled()) {
+            rigidbody.useGravity = false;
+            useGravity = false;
+            return;
+        }
     }
 
     // void OnTriggerStay(Collider other) {
@@ -103,20 +112,6 @@ public class DestroyableObj : MonoBehaviour
             SoundManager.instance.PlayItemFail();
         }
     }
-
-    // Don't let it exit for now
-    // void OnTriggerExit(Collider other){
-    //     if (other.tag == "gravity field" && rigidBodyExists && GameManager.S.GetDestroyedScore() >= threshold) {
-    //         if(renderer){
-    //             matColor = renderer.material.color;
-    //         }
-    //         if(useGravity){
-    //             rigidbody.useGravity = true;
-    //         }
-    //         rigidbody.isKinematic = false;
-    //         rigidbody.detectCollisions = true;
-    //     }
-    // }
 
     IEnumerator DisappearEffect(float timeToWait) {
         float startTime = Time.time;

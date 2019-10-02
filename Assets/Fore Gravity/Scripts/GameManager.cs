@@ -19,8 +19,10 @@ public class GameManager : MonoBehaviour
     public static GameManager S;
     private static int destroyedObjects = 0;
     // TODO: auto populate this by having destroyable objs send mssg to gm
-    private static int totalObjectsToWin = 0;
+    private static int totalPointsToWin = 0;
     bool won = false;
+    bool disableGravity = false;
+    bool broadcastGravityDisabled = false;
 
     // GameObject Components
     // Player is currently just the right glove!
@@ -39,16 +41,31 @@ public class GameManager : MonoBehaviour
         SteamVR_Fade.Start(Color.clear, 2);
     }
 
-    public void AddDestroyableObject(){
-        totalObjectsToWin++;
+    public void AddDestroyableObject(int points){
+        totalPointsToWin += points;
     }
 
     public void UpdateDestroyedScore() {
         destroyedObjects++;
+
+        // If we've destroyed an object after calling disable gravity
+        if (disableGravity) {
+            disableGravity = false;
+            //Play voice line for disable gravity
+            broadcastGravityDisabled = true;
+        }
     }
 
     public int GetDestroyedScore() {
         return destroyedObjects;
+    }
+
+    public void DisableGravity() {
+        disableGravity = true;
+    }
+
+    public bool GetBroadcastGravityDisabled() {
+        return broadcastGravityDisabled;
     }
 
     void Update() {
@@ -60,7 +77,7 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(startScene);
         }
 
-        if ((destroyedObjects >= totalObjectsToWin && !won) || Input.GetButtonUp("Fire3")) {
+        if ((destroyedObjects >= totalPointsToWin && !won) || Input.GetButtonUp("Fire3")) {
             if (SceneManager.GetActiveScene().name == startScene) {
                 SoundManager.instance.PlayTrashFinish();
                 won = true;
@@ -94,7 +111,9 @@ public class GameManager : MonoBehaviour
         }
         AO.allowSceneActivation = true;
         destroyedObjects = 0;
-        won = false;
+        won = false;   
+        disableGravity = false;
+        broadcastGravityDisabled = false;
 
         // TODO: move these to a SOLID start of the new room!
         SoundManager.instance.PlayHexEntrance();

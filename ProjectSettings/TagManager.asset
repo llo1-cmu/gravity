@@ -11,6 +11,7 @@ TagManager:
   - Target Plane
   - UI Button
   - gravity field
+  - Disable Gravity
   layers:
   - Default
   - TransparentFX
