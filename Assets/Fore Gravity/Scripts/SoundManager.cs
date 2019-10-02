@@ -6,113 +6,194 @@ public class SoundManager : MonoBehaviour
 {
     #pragma warning disable 0649
     [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource;
-    [SerializeField] AudioClip initialWarning, frisbeeCalling, frisbeeCaught, frisbeeAbsorb;
     //beta clips 1-4
     [SerializeField] List<AudioClip> lostFrisbeeLines;
     //beta clip 5-7 
-    [SerializeField] AudioClip frisbeeCaught1, frisbeeCaught2, frisbeeCaught3;
+    [SerializeField] List<AudioClip> frisbeeGrabbedLines;
     // beta clips 8, 9 respectively
+    // if you succeed in absorbing an object the first time
     [SerializeField] AudioClip successfulItem, failedItem;
     // beta clips 10, ship PA system
-    [SerializeField] AudioClip finishedP1, finishedPart2;
+    // finishedP1 + finished P2 run when you finish trash room
+    [SerializeField] List<AudioClip> trashFinishedLines;
     // random lines to choose from while throwing
     [SerializeField] List<AudioClip> trashRoomLines;
     // beta 12, beta 14
-    [SerializeField] AudioClip newPlace, ending;
+    // newPlace first line in hexroom, ending last line
+    [SerializeField] List<AudioClip> newPlaceLines;
+    [SerializeField] AudioClip ending;
     // beta 13
     [SerializeField] List<AudioClip> hexRoomLines;
-    private bool isPlaying = false;
+
+    // List with priorities - plays ending clips before others
+    SortedList<int, AudioClip> queuedTracks;
+    private bool isPlaying;
     public static SoundManager instance;
     #pragma warning restore 0649
 
 
-    //TODO: is it alright if everything just plays at the same time????
     void Awake()
     {
         instance = this;
+        queuedTracks = new SortedList<int, AudioClip>();
+        isPlaying = false;
     }
 
-    public void PlayWarning()
-    {
-        instance.StartCoroutine(PlayWarningTime());
-    }
-
-    // Continue to call these until the frisbee has been grabbed as it drifts towards the player.
+    // Continue to call these until the frisbee has been grabbed as it drifts towards the player in the intro scene
     public void PlayFrisbeePrompt()
     {
-        instance.StartCoroutine(PlayFrisbeeListLines(instance.lostFrisbeeLines, 3));
+        queuedTracks.Add(2, lostFrisbeeLines[0]);
+        instance.StartCoroutine(PlayRoutine());
     }
-    public void PlayFrisbeeCaught()
-    {    
-        instance.frisbeeAudioSource.PlayOneShot(instance.frisbeeCaught1);
-        instance.StartCoroutine(PlayFrisbeeInitialLines());
 
+    // When we grab the frisbee for the first time
+    public void PlayFrisbeeGrabbed()
+    {
+        queuedTracks.Add(0, frisbeeGrabbedLines[0]);
+        frisbeeAudioSource.Stop();
+        isPlaying = false;
+        instance.StartCoroutine(PlayRoutine());
     }
+
+    // Plays when you throw for the first time but don't suck in an item
     public void PlayItemFail()
     {
-        instance.frisbeeAudioSource.PlayOneShot(instance.failedItem);
+        queuedTracks.Add(1, failedItem);
     }
 
+    // Plays when you throw for the first time and do suck in an item
     public void PlayItemSucceed()
     {
-        instance.frisbeeAudioSource.PlayOneShot(instance.successfulItem);
+        queuedTracks.Add(1, successfulItem);
     }
-
+    
+    // Plays on occasion in the trash room
     public void TrashLine()
     {
-        instance.StartCoroutine(PlayFrisbeeListLines(instance.trashRoomLines, 3));
+        queuedTracks.Add(2, trashRoomLines[0]);
     }
 
+    // Plays when we finish trash room
+    public void PlayTrashFinish() {
+        queuedTracks.Add(0, trashFinishedLines[0]);
+    }
 
+    // Plays on occasion in the hex room
     public void HexLine()
     {
-        instance.StartCoroutine(PlayFrisbeeListLines(instance.hexRoomLines, 3));
+        queuedTracks.Add(2, hexRoomLines[0]);
     }
 
-    public void PlaySphereHit(){
-        instance.frisbeeAudioSource.PlayOneShot(instance.frisbeeAbsorb);
+    // Plays when we enter the hex room for the first time
+    public void PlayHexEntrance() {
+        queuedTracks.Add(0, newPlaceLines[0]);
     }
 
-    public bool IsPlaying(){
-        return instance.isPlaying;
+    // Play the ending clip
+    public void PlayEnding() {
+        queuedTracks.Add(0, ending);
     }
 
-    IEnumerator ArriveHex()
+    IEnumerator PlayRoutine() {
+        while (queuedTracks.Count <= 0 || isPlaying) { }
+
+        // If we have things to play queued up
+        AudioClip toPlay = queuedTracks.Values[0];
+        queuedTracks.RemoveAt(0);
+
+        switch (toPlay.name) {
+            // When we play ending, empty the queue
+            case "14 Ending":
+            // We just entered the hex room
+                queuedTracks = new SortedList<int, AudioClip>();
+                StartCoroutine(PlayClip(toPlay));
+                break;
+
+            // We are exiting trash room, clear the queue
+            case "10 Trash Finish":
+                queuedTracks = new SortedList<int, AudioClip>();
+                StartCoroutine(PlayInSuccession(trashFinishedLines));
+                break;
+
+            // We grabbed the frisbee for the first time
+            case "5 Grabbed":
+                queuedTracks = new SortedList<int, AudioClip>();
+                StartCoroutine(PlayInSuccession(frisbeeGrabbedLines));
+                break;
+            
+            case "11 Where We":
+                queuedTracks = new SortedList<int, AudioClip>();
+                StartCoroutine(PlayInSuccession(newPlaceLines));
+                break;
+
+            // We just sucked up an item
+            case "8 Success":
+            // We just failed to suck up an item
+            case "9 Fail":
+                StartCoroutine(PlayClip(toPlay));
+                break;
+
+            // We haven't grabbed the frisbee yet
+            case "Intro0 Bicycle":
+                StartCoroutine(PlayFrisbeeListLines(lostFrisbeeLines, 3));
+                break;
+
+            // We are idling in the hex room
+            case "13 Hex Lines":
+                StartCoroutine(PlayFrisbeeListLines(hexRoomLines, 5));
+                break;
+
+            // We are idling in the trash room
+            // Nothing here rn
+            case "trashLines":
+                StartCoroutine(PlayFrisbeeListLines(trashRoomLines, 5));
+                break;
+
+            // God knows why we'd be here
+            default:
+                break;
+        }
+
+        yield return new WaitForSeconds(0);
+    }
+
+    IEnumerator PlayClip(AudioClip clip)
     {
-        yield return new WaitForSeconds(2);
-        instance.frisbeeAudioSource.PlayOneShot(instance.newPlace);
-    }
-
-    IEnumerator PlayFrisbeeListLines(List<AudioClip> listToPlay, int bufferBetween) {
-        int choose = Random.Range(0, listToPlay.Count);
         isPlaying = true;
-        instance.frisbeeAudioSource.PlayOneShot(listToPlay[choose]);
-        yield return new WaitForSeconds(listToPlay[choose].length);
-        //Buffer between clips being played
-        yield return new WaitForSeconds(bufferBetween);
+        instance.StopCoroutine(PlayRoutine());
+        frisbeeAudioSource.PlayOneShot(clip);
+        yield return new WaitForSeconds(clip.length);
         isPlaying = false;
-        //TODO: why is this here?
-        //instance.frisbeeAudioSource.Play(instance.frisbeeCalling);
+        instance.StartCoroutine(PlayRoutine());
     }
 
-    IEnumerator PlayFrisbeeInitialLines()
+    IEnumerator PlayFrisbeeListLines(List<AudioClip> listToPlay, int    
+        bufferBetween) 
     {
-        instance.frisbeeAudioSource.PlayOneShot(instance.frisbeeCaught2);
-        yield return new WaitForSeconds(instance.frisbeeCaught2.length);
-        instance.frisbeeAudioSource.PlayOneShot(instance.frisbeeCaught3);
-        yield return new WaitForSeconds(instance.frisbeeCaught3.length);
+        isPlaying = true;
+        instance.StopCoroutine(PlayRoutine());
+        int choose = Random.Range(0, listToPlay.Count);
+        frisbeeAudioSource.PlayOneShot(listToPlay[choose]);
+        yield return new WaitForSeconds(listToPlay[choose].length + bufferBetween);
 
+        queuedTracks.Add(2, listToPlay[0]);
+        isPlaying = false;
+        instance.StartCoroutine(PlayRoutine());
     }
 
-    IEnumerator PlayWarningTime()
+    IEnumerator PlayInSuccession(List<AudioClip> listToPlay) 
     {
-        instance.frisbeeAudioSource.PlayOneShot(instance.finishedP1);
-        //TODO: why do we wait 7 seconds?
-        yield return new WaitForSeconds(instance.finishedP1.length);
-        instance.shipAudioSource.Stop();
-        instance.shipAudioSource.PlayOneShot(instance.initialWarning);
+        isPlaying = true;
+        instance.StopCoroutine(PlayRoutine());
+        foreach (AudioClip clip in listToPlay) {
+            frisbeeAudioSource.PlayOneShot(clip);
+            yield return new WaitForSeconds(clip.length);
+        }
 
+        isPlaying = false;
+        instance.StartCoroutine(PlayRoutine());
     }
+
 }
 
 

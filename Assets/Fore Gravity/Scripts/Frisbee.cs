@@ -25,7 +25,7 @@ public class Frisbee : MonoBehaviour
     [SerializeField] private float recallSpeed = 10.0f;
 
     [SerializeField] private GameObject gravityField;
-    private bool firstCaughtPlayed, firstSphereHit;
+    private bool firstCaughtPlayed, firstItemSuccess;
 
     [SerializeField] private Material originalMaterial, recallMaterial;
     [SerializeField] private MeshRenderer FrisbeeSphere;
@@ -72,9 +72,6 @@ public class Frisbee : MonoBehaviour
         else if (introScene) {
             // Frisbee drifts towards player
             transform.position = Vector3.MoveTowards(transform.position, GameManager.S.player.transform.position, 0.0008f);
-            if (!SoundManager.instance.IsPlaying()) {
-                SoundManager.instance.PlayFrisbeePrompt();
-            }
         }
         else if(recalling && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Non-physical recall
@@ -130,9 +127,9 @@ public class Frisbee : MonoBehaviour
             gravityField.SetActive(true);
         }
 
-        if(!firstSphereHit /*&& Tutorial.IsTutorial()*/ && GameManager.S.GetDestroyedScore() > 0){
-            SoundManager.instance.PlaySphereHit();
-            firstSphereHit = true;
+        if(!firstItemSuccess /*&& Tutorial.IsTutorial()*/ && GameManager.S.GetDestroyedScore() > 0){
+            SoundManager.instance.PlayItemSucceed();
+            firstItemSuccess = true;
         }
     }
 
@@ -153,14 +150,6 @@ public class Frisbee : MonoBehaviour
             default:
                 break;
         }
-        // if(other.tag == "VR Controller" && recalling){
-        //     // Recall complete, clear all momentum
-        //     recalling = false;
-        //     rigidbody.velocity = Vector3.zero;
-        //     rigidbody.angularVelocity = Vector3.zero;
-        //     // Velocity is not calculated by VelocityEstimator
-        //     velocityEstimator.BeginEstimatingVelocity();
-        // }
     }
 
     void RecallEffect(){
@@ -194,7 +183,7 @@ public class Frisbee : MonoBehaviour
         }
 
         if(/*Tutorial.IsTutorial() &&*/ !firstCaughtPlayed){
-            SoundManager.instance.PlayFrisbeeCaught();
+            SoundManager.instance.PlayFrisbeeGrabbed();
             firstCaughtPlayed = true;
         }
     }
@@ -209,12 +198,6 @@ public class Frisbee : MonoBehaviour
             }
         }
     }
-    /*void OnTriggerExit(Collider other){
-        if(attachedController != null && rigidbody.useGravity == false){
-            // Recall the frisbee if it accidentally leaves the hand.
-            recalling = true;
-        }
-    }*/
 
     void OnCollisionEnter(Collision collision){
         if(collision.collider.tag == "Target Plane"){
@@ -239,7 +222,6 @@ public class Frisbee : MonoBehaviour
         return transform.TransformDirection(Vector3.Scale(transform.InverseTransformDirection(angularVelocity), scaleVector));
     }
 
-    //TODO: scale based on size of object we destroy?
     public void IncreaseGravityField(){
         gravityField.GetComponent<GravityField>().IncreaseGravityField();
     }
