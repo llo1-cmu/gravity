@@ -45,6 +45,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shipAudioSource: {fileID: 4556048181799933117}
   frisbeeAudioSource: {fileID: 4556048181431169643}
+  frisbeeThrow: {fileID: 8300000, guid: ec9a180a62bd49a4d9006cf98a1db5d3, type: 3}
+  frisbeeRecall: {fileID: 8300000, guid: d3e480ff5c793f64398518268b6572bc, type: 3}
+  frisbeeAbsorb: {fileID: 8300000, guid: 45762ccf8aa36af4a9a92259f8a4d80c, type: 3}
+  frisbeeCatch: {fileID: 8300000, guid: 06d93030d025cb040bc196ef422a2e21, type: 3}
   lostFrisbeeLines:
   - {fileID: 8300000, guid: 2db876723a2bd844ead630b2edb6fbb9, type: 3}
   - {fileID: 8300000, guid: 430545aebf7b12c46abf052cab2dc06f, type: 3}
@@ -131,7 +135,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4556048181152489364}
   - component: {fileID: 4556048181152489365}
-  - component: {fileID: 4556048181152489354}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -165,31 +168,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04767a14fd2ffa845b6c10268b1873a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startScene: Empty Room
+  startScene: Big Trash Room
+  endScene: Hexagon_Lisa
   winScreen: {fileID: 0}
   cameraRig: {fileID: 4556048181399289360}
   frisbee: {fileID: 5484180073938423618}
   placeToMove: {x: 0, y: 0, z: 0}
   frisbeePlaceToMove: {x: 0, y: 0, z: 0}
   player: {fileID: 4555910198711589857}
---- !u!114 &4556048181152489354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4556048181152489367}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0dc217deb3c176c4b81e9da6dd1fbdfb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shipAudioSource: {fileID: 4556048181799933117}
-  frisbeeAudioSource: {fileID: 4556048181431169643}
-  initialWarning: {fileID: 8300000, guid: 356137ed068b9814c9a50782a261dd63, type: 3}
-  frisbeeCalling: {fileID: 8300000, guid: 2517f927f2ad2d647bf57b2516411069, type: 3}
-  frisbeeCaught: {fileID: 8300000, guid: 6c0281a1225ad50478c1ae12e2157612, type: 3}
-  frisbeeAffirm: {fileID: 8300000, guid: e973860e538e9e6419f1febdfb048931, type: 3}
 --- !u!136 &4556048182994410735
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -5553,9 +5539,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftController: {fileID: 4556048181107732708}
   rightController: {fileID: 4556048181704279221}
-  catchSound: {fileID: 8300000, guid: 06d93030d025cb040bc196ef422a2e21, type: 3}
-  throwSound: {fileID: 8300000, guid: ec9a180a62bd49a4d9006cf98a1db5d3, type: 3}
-  recallSound: {fileID: 8300000, guid: d3e480ff5c793f64398518268b6572bc, type: 3}
   recallSpeed: 20
   gravityField: {fileID: 4556048182194113691}
   originalMaterial: {fileID: -4713721666042998022, guid: 4492729e668e6bd43a68288008826e88,

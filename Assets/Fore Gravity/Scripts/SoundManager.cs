@@ -6,6 +6,7 @@ public class SoundManager : MonoBehaviour
 {
     #pragma warning disable 0649
     [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource;
+    [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeAbsorb, frisbeeCatch;
     //beta clips 1-4
     [SerializeField] List<AudioClip> lostFrisbeeLines;
     //beta clip 5-7 
@@ -38,6 +39,30 @@ public class SoundManager : MonoBehaviour
         queuedTracks = new SortedList<int, AudioClip>();
         isPlaying = false;
     }
+
+
+    /*********************
+        Small SFX
+    *********************/
+    public void PlayFrisbeeCatch() {
+        frisbeeAudioSource.PlayOneShot(frisbeeCatch);
+    }
+
+    public void PlayRecall() {
+        frisbeeAudioSource.PlayOneShot(frisbeeRecall);
+    }
+
+    public void PlayThrow() {
+        frisbeeAudioSource.PlayOneShot(frisbeeThrow);
+    }
+
+    public void PlayAbsorb() {
+        frisbeeAudioSource.PlayOneShot(frisbeeAbsorb);
+    }
+
+    /*********************
+        Longer Sounds
+    *********************/
 
     // Continue to call these until the frisbee has been grabbed as it drifts towards the player in the intro scene
     public void PlayFrisbeePrompt()
@@ -76,6 +101,9 @@ public class SoundManager : MonoBehaviour
     // Plays when we finish trash room
     public void PlayTrashFinish() {
         queuedTracks.Add(0, trashFinishedLines[0]);
+        frisbeeAudioSource.Stop();
+        isPlaying = false;
+        instance.StartCoroutine(PlayRoutine());
     }
 
     // Plays on occasion in the hex room
@@ -86,12 +114,15 @@ public class SoundManager : MonoBehaviour
 
     // Plays when we enter the hex room for the first time
     public void PlayHexEntrance() {
-        queuedTracks.Add(0, newPlaceLines[0]);
+        queuedTracks.Add(1, newPlaceLines[0]);
     }
 
     // Play the ending clip
     public void PlayEnding() {
         queuedTracks.Add(0, ending);
+        frisbeeAudioSource.Stop();
+        isPlaying = false;
+        instance.StartCoroutine(PlayRoutine());
     }
 
     IEnumerator PlayRoutine() {
@@ -174,7 +205,9 @@ public class SoundManager : MonoBehaviour
         instance.StopCoroutine(PlayRoutine());
         int choose = Random.Range(0, listToPlay.Count);
         frisbeeAudioSource.PlayOneShot(listToPlay[choose]);
-        yield return new WaitForSeconds(listToPlay[choose].length + bufferBetween);
+
+        yield return new WaitForSeconds(bufferBetween);
+        yield return new WaitForSeconds(listToPlay[choose].length);
 
         queuedTracks.Add(2, listToPlay[0]);
         isPlaying = false;
