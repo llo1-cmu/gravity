@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 
     // Scene Names
     [SerializeField] private string startScene = "Big Trash Room";
-    [SerializeField] private string endScene = "Hexagon_Lisa";
+    [SerializeField] private string endScene = "2_Hexagon_Lisa";
 
     // Game Manager Vars
     public static GameManager S;
