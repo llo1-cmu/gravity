@@ -55,7 +55,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 917101b15255a94489c25cf85334a3e9, type: 3}
   - {fileID: 8300000, guid: 42d13cfe529e79242b64254ed7e04b22, type: 3}
   - {fileID: 8300000, guid: 52ca0defbac50e848b6f77dfe53098c8, type: 3}
-  frisbeeGrabbedLines: []
+  frisbeeGrabbedLines:
+  - {fileID: 8300000, guid: a022b259bae357743835dc2548dd1c3c, type: 3}
+  - {fileID: 8300000, guid: a42aecccc5edc924885e68aeec9c3a61, type: 3}
+  - {fileID: 8300000, guid: dd6cad07ce34c1843b8a1da0070097da, type: 3}
   successfulItem: {fileID: 8300000, guid: 4bbd113e4d2b1b443a7c02230d72f275, type: 3}
   failedItem: {fileID: 8300000, guid: 81abb28749a388e48a08d7c9e9b0d723, type: 3}
   trashFinishedLines:
@@ -170,11 +173,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startScene: Big Trash Room
   endScene: Hexagon_Lisa
-  winScreen: {fileID: 0}
-  cameraRig: {fileID: 4556048181399289360}
-  frisbee: {fileID: 5484180073938423618}
-  placeToMove: {x: 0, y: 0, z: 0}
-  frisbeePlaceToMove: {x: 0, y: 0, z: 0}
   player: {fileID: 4555910198711589857}
 --- !u!136 &4556048182994410735
 CapsuleCollider:
@@ -608,45 +606,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81c5272bfd8341b4295b6c5d9647d33f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ForceCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1.0100403
-      inSlope: -3.5444798
-      outSlope: -3.5444798
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.17540422
-      value: 0.38832352
-      inSlope: -1.9945555
-      outSlope: -1.9945555
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.99890137
-      value: 0.02217102
-      inSlope: -0.44463116
-      outSlope: -0.44463116
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  _MaxForce: 5
-  _ObjectMask:
-    serializedVersion: 2
-    m_Bits: 256
   increaseFactor: 1.1
-  maxParticleSize: 0.1
+  firstItemFailed: 0
 --- !u!1 &4556048182238972358
 GameObject:
   m_ObjectHideFlags: 0
@@ -5539,16 +5500,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftController: {fileID: 4556048181107732708}
   rightController: {fileID: 4556048181704279221}
-  recallSpeed: 20
-  gravityField: {fileID: 4556048182194113691}
-  originalMaterial: {fileID: -4713721666042998022, guid: 4492729e668e6bd43a68288008826e88,
-    type: 3}
-  recallMaterial: {fileID: 2100000, guid: 99ee409229934ec43bd68e887a23764a, type: 2}
-  FrisbeeSphere: {fileID: 8119689876843745518}
   vibration:
     actionPath: /actions/default/out/Haptic
     needsReinit: 0
+  gravityField: {fileID: 4556048182194113691}
+  FrisbeeSphere: {fileID: 8119689876843745518}
   mainCamera: {fileID: 4554371034272285682}
+  recallSpeed: 20
+  originalMaterial: {fileID: -4713721666042998022, guid: 4492729e668e6bd43a68288008826e88,
+    type: 3}
+  recallMaterial: {fileID: 2100000, guid: 99ee409229934ec43bd68e887a23764a, type: 2}
 --- !u!114 &4556048182767736398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5574,7 +5535,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2716453685655884675}
   m_Layer: 0
-  m_Name: Play Area Prefab
+  m_Name: Sound Play Area Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10444,27 +10405,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d293c8e162f3874b982baadd71153d2, type: 3}
---- !u!1 &4556048181399289360 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 146900, guid: 4d293c8e162f3874b982baadd71153d2,
-    type: 3}
-  m_PrefabInstance: {fileID: 4556048181399143364}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4554371034272285682 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000013889601590, guid: 4d293c8e162f3874b982baadd71153d2,
     type: 3}
   m_PrefabInstance: {fileID: 4556048181399143364}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4555910196076951532 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1000014254142504, guid: 4d293c8e162f3874b982baadd71153d2,
-    type: 3}
-  m_PrefabInstance: {fileID: 4556048181399143364}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4556048181399268704 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 159396, guid: 4d293c8e162f3874b982baadd71153d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 4556048181399143364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4555910196076951532 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1000014254142504, guid: 4d293c8e162f3874b982baadd71153d2,
     type: 3}
   m_PrefabInstance: {fileID: 4556048181399143364}
   m_PrefabAsset: {fileID: 0}
@@ -10722,15 +10677,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5dc81ef5cae96304586abbc6e4b5beb8, type: 3}
---- !u!1 &4555910198711589857 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1000010184414672, guid: 5dc81ef5cae96304586abbc6e4b5beb8,
-    type: 3}
-  m_PrefabInstance: {fileID: 4556048183097609777}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4554371035836739189 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000011683143748, guid: 5dc81ef5cae96304586abbc6e4b5beb8,
+    type: 3}
+  m_PrefabInstance: {fileID: 4556048183097609777}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4555910198711589857 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1000010184414672, guid: 5dc81ef5cae96304586abbc6e4b5beb8,
     type: 3}
   m_PrefabInstance: {fileID: 4556048183097609777}
   m_PrefabAsset: {fileID: 0}

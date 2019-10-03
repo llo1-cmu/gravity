@@ -20,7 +20,7 @@ public class RecallHint : MonoBehaviour
     void Update()
     {
         if(!(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource))
-            && Vector3.Angle(mainCamera.transform.forward, rightHandObject.transform.position - mainCamera.transform.position) < 15.0f){
+            && Vector3.Angle(mainCamera.transform.forward, rightHandObject.transform.position - mainCamera.transform.position) < 25.0f){
             rightHandHint.SetActive(true);
         }
         else{
@@ -28,11 +28,11 @@ public class RecallHint : MonoBehaviour
         }
 
         if(!(SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))
-            && Vector3.Angle(mainCamera.transform.forward, leftHandObject.transform.position - mainCamera.transform.position) < 15.0f){
-            leftHandObject.SetActive(true);
+            && Vector3.Angle(mainCamera.transform.forward, leftHandObject.transform.position - mainCamera.transform.position) < 25.0f){
+            leftHandHint.SetActive(true);
         }
         else{
-            leftHandObject.SetActive(false);
+            leftHandHint.SetActive(false);
         }
     }
 }

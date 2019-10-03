@@ -183,6 +183,7 @@ public class Frisbee : MonoBehaviour
 
         // We grab the frisbee for the first time
         if(/*Tutorial.IsTutorial() &&*/ !firstCaughtPlayed){
+            print("calling");
             SoundManager.instance.PlayFrisbeeGrabbed();
             firstCaughtPlayed = true;
             SoundManager.instance.TrashLine();
