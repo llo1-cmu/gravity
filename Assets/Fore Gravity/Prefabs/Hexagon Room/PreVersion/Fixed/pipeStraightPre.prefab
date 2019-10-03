@@ -27,8 +27,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.5774136, y: 0.8908205, z: 0.94800186}
-  m_Center: {x: 4.9819984, y: -2.5266547, z: -5.6388655}
+  m_Size: {x: 2.0203428, y: 0.8908205, z: 0.94800186}
+  m_Center: {x: 5.002643, y: -2.5266547, z: -5.6388655}
 --- !u!65 &8936110039841392821
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40,8 +40,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.248661, y: 0.94506073, z: 1.0154953}
-  m_Center: {x: 4.824336, y: -2.5620246, z: -5.6257505}
+  m_Size: {x: 2.020343, y: 0.8908205, z: 0.9480019}
+  m_Center: {x: 5.002643, y: -2.526655, z: -5.638865}
 --- !u!114 &6169393705823241936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55,6 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 20
+  pointValue: 5
 --- !u!1001 &1227949327013643461
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -131,7 +132,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 79bf7ae28ff43cc4ca939f5652f4d38b, type: 2}
+      objectReference: {fileID: 2100000, guid: 09dc7d521184444d799c25136b6d92f7, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e13d8010fed7f4aaf82806c36e382dcc, type: 3}
 --- !u!1 &7073853735085759948 stripped

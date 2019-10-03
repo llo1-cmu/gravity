@@ -55,6 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 40
+  pointValue: 5
 --- !u!1001 &6308964885114201043
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -132,6 +133,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: d32c3382b71064884a1c92ea8c7c785e, type: 2}
+    - target: {fileID: -2397996973257786244, guid: f608ea021a8d34d598f073da6df1c801,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f1215285ab724739bf1c880c345258e, type: 2}
     - target: {fileID: 608615394619914483, guid: f608ea021a8d34d598f073da6df1c801,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

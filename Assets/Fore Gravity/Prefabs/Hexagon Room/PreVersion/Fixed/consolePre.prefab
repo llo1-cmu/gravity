@@ -55,6 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 10
+  pointValue: 5
 --- !u!1001 &2835188272983331250
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -136,7 +137,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 4a11ac89ec3635a4b896556552983d54, type: 2}
+      objectReference: {fileID: 2100000, guid: 501f61425c9714bbdb808da7837b347b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76229333a753c41e8baeae73322740b5, type: 3}
 --- !u!1 &6087021303721167035 stripped
