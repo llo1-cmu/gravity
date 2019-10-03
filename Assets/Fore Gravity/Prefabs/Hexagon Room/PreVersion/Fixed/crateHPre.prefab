@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 0
-  pointValue: 5
+  pointValue: 1
 --- !u!1001 &7450777369602391445
 PrefabInstance:
   m_ObjectHideFlags: 0

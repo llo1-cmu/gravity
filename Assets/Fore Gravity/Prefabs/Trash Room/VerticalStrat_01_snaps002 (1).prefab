@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4863474029950106088}
   - component: {fileID: 5959369311821756792}
   - component: {fileID: 1218478730573727370}
+  - component: {fileID: 4636299717277545700}
   m_Layer: 0
   m_Name: VerticalStrat_01_snaps002_(1)
   m_TagString: Untagged
@@ -78,6 +79,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &4636299717277545700
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4034950132121708639}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.2500088, y: 2.0001428, z: 1.25}
+  m_Center: {x: -4.4999995, y: 1.0000006, z: 1.5}
 --- !u!1 &8397793679048775649
 GameObject:
   m_ObjectHideFlags: 0

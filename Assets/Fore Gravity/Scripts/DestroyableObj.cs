@@ -42,6 +42,7 @@ public class DestroyableObj : MonoBehaviour
     void Update() {
         if (GameManager.S.GetBroadcastGravityDisabled()) {
             rigidbody.useGravity = false;
+            rigidbody.isKinematic = false;
             useGravity = false;
             return;
         }

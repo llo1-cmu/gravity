@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76b7f347424f2ae4caf7630968993837, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  threshold: 0
+  threshold: 90
   pointValue: 5
 --- !u!1001 &9085309164820191392
 PrefabInstance:

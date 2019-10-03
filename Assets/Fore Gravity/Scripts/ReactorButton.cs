@@ -7,6 +7,7 @@ public class ReactorButton : MonoBehaviour
 {
     // Assign doors in the inspector
     [SerializeField] private GameObject blockingPlane;
+    [SerializeField] private GameObject lightSection;
     DestroyableObj _DestroyableObj;
     void Start()
     {
@@ -16,6 +17,8 @@ public class ReactorButton : MonoBehaviour
 
     private void OpenBlock(){
         blockingPlane.SetActive(false);
+        lightSection.SetActive(false);
+        
     }
 
     void OnTriggerEnter(Collider other){
