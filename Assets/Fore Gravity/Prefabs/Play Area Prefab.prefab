@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04767a14fd2ffa845b6c10268b1873a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startScene: Empty Room
+  startScene: Big Trash Room
   endScene: 2_Hexagon_Lisa
   player: {fileID: 4555910198711589857}
 --- !u!114 &4191639832446884055

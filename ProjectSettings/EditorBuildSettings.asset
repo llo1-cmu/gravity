@@ -20,7 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Fore Gravity/Scenes/Big Trash Room.unity
     guid: 78f0a8ad848926f4195fbd5af8b44977
-  - enabled: 1
+  - enabled: 0
     path: Assets/Fore Gravity/Scenes/Hexagon_Lisa.unity
     guid: 4169d27e034d841c3bed60e50e8c842d
+  - enabled: 1
+    path: Assets/Fore Gravity/Scenes/2_Hexagon_Lisa.unity
+    guid: 5e1e39a38998f46d78df9392014c4c6a
   m_configObjects: {}

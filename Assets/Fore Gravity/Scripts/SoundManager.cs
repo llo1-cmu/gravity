@@ -69,7 +69,7 @@ public class SoundManager : MonoBehaviour
     // Continue to call these until the frisbee has been grabbed as it drifts towards the player in the intro scene
     public void PlayFrisbeePrompt()
     {
-        print("something");
+        //print("something");
         queuedTracks.Add(4, lostFrisbeeLines[0]);
         instance.StartCoroutine(PlayRoutine());
     }
@@ -77,7 +77,6 @@ public class SoundManager : MonoBehaviour
     // When we grab the frisbee for the first time
     public void PlayFrisbeeGrabbed()
     {
-        print("ahhhhhh");
         frisbeeAudioSource.Stop();
         queuedTracks.Add(2, frisbeeGrabbedLines[0]);
         instance.StopAllCoroutines();
@@ -155,7 +154,6 @@ public class SoundManager : MonoBehaviour
 
             // We grabbed the frisbee for the first time
             case "5 Grabbed":
-                print("grabbed");
                 queuedTracks = new SortedList<int, AudioClip>();
                 StartCoroutine(PlayInSuccession(frisbeeGrabbedLines));
                 break;
@@ -199,7 +197,7 @@ public class SoundManager : MonoBehaviour
     IEnumerator PlayClip(AudioClip clip)
     {
         isPlaying = true;
-        instance.StopCoroutine(PlayRoutine());
+        instance.StopAllCoroutines();
         frisbeeAudioSource.PlayOneShot(clip);
         yield return new WaitForSeconds(clip.length);
         isPlaying = false;
@@ -210,7 +208,7 @@ public class SoundManager : MonoBehaviour
         bufferBetween, int priority) 
     {
         isPlaying = true;
-        instance.StopCoroutine(PlayRoutine());
+        instance.StopAllCoroutines();
         int choose = Random.Range(0, listToPlay.Count);
         frisbeeAudioSource.PlayOneShot(listToPlay[choose]);
 
@@ -225,9 +223,7 @@ public class SoundManager : MonoBehaviour
     IEnumerator PlayInSuccession(List<AudioClip> listToPlay) 
     {
         isPlaying = true;
-        instance.StopCoroutine(PlayRoutine());
-        print("playing");
-        print(listToPlay.ToString());
+        instance.StopAllCoroutines();
         foreach (AudioClip clip in listToPlay) {
             frisbeeAudioSource.PlayOneShot(clip);
             yield return new WaitForSeconds(clip.length);

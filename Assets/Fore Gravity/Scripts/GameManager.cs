@@ -17,9 +17,9 @@ public class GameManager : MonoBehaviour
 
     // Game Manager Vars
     public static GameManager S;
-    private static int destroyedObjects = 0;
+    [SerializeField] private int destroyedObjects = 0;
     // TODO: auto populate this by having destroyable objs send mssg to gm
-    private static int totalPointsToWin = 0;
+    [SerializeField] private int totalPointsToWin = 0;
     bool won = false;
     bool disableGravity = false;
     bool broadcastGravityDisabled = false;
@@ -45,8 +45,8 @@ public class GameManager : MonoBehaviour
         totalPointsToWin += points;
     }
 
-    public void UpdateDestroyedScore() {
-        destroyedObjects++;
+    public void UpdateDestroyedScore(int newVal) {
+        destroyedObjects += newVal;
 
         // If we've destroyed an object after calling disable gravity
         if (disableGravity) {
@@ -76,8 +76,7 @@ public class GameManager : MonoBehaviour
             won = false;
             SceneManager.LoadScene(startScene);
         }
-
-        if ((destroyedObjects >= totalPointsToWin && !won) || Input.GetButtonUp("Fire3")) {
+        if ((destroyedObjects >= 1000 && !won) || Input.GetButtonUp("Fire3")) {
             if (SceneManager.GetActiveScene().name == startScene) {
                 SoundManager.instance.PlayTrashFinish();
                 won = true;
@@ -90,7 +89,7 @@ public class GameManager : MonoBehaviour
     }
 
     IEnumerator blackOutScreen(){
-        Tutorial.PlayWarning();
+        // Tutorial.PlayWarning();
         //black out screen
         SteamVR_Fade.Start(Color.black, 7.0f);
         //GetComponent<SteamVR_LoadLevel>().levelName = "Hexagon";

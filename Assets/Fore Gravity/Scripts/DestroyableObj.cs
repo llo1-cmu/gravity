@@ -124,7 +124,7 @@ public class DestroyableObj : MonoBehaviour
             yield return null;
         }
 
-        GameManager.S.UpdateDestroyedScore();
+        GameManager.S.UpdateDestroyedScore(pointValue);
         Destroy(gameObject);
     }
 }
