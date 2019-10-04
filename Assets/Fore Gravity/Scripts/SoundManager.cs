@@ -7,7 +7,7 @@ public class SoundManager : MonoBehaviour
     //priority list: 0 ending, 1 trashroomending, 2 frisbeegrabbed, 3 newplace,
     // 4 lostfrisbeelines, 5 success, 6 fail, 7 trashroomlines, 8 hexroomlines
     #pragma warning disable 0649
-    [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource;
+    [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource, sfxSource;
     [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeAbsorb, frisbeeCatch;
     //beta clips 1-4
     [SerializeField] List<AudioClip> lostFrisbeeLines;
@@ -32,6 +32,9 @@ public class SoundManager : MonoBehaviour
     SortedList<int, AudioClip> queuedTracks;
     private bool isPlaying;
     public static SoundManager instance;
+    static bool playedIntro = false;
+    static bool playedSuccess = false;
+    static bool playedFail = false;
     #pragma warning restore 0649
 
 
@@ -39,7 +42,6 @@ public class SoundManager : MonoBehaviour
     {
         instance = this;
         queuedTracks = new SortedList<int, AudioClip>();
-        isPlaying = false;
     }
 
 
@@ -47,19 +49,19 @@ public class SoundManager : MonoBehaviour
         Small SFX
     *********************/
     public void PlayFrisbeeCatch() {
-        frisbeeAudioSource.PlayOneShot(frisbeeCatch);
+        sfxSource.PlayOneShot(frisbeeCatch);
     }
 
     public void PlayRecall() {
-        frisbeeAudioSource.PlayOneShot(frisbeeRecall);
+        sfxSource.PlayOneShot(frisbeeRecall);
     }
 
     public void PlayThrow() {
-        frisbeeAudioSource.PlayOneShot(frisbeeThrow);
+        sfxSource.PlayOneShot(frisbeeThrow);
     }
 
     public void PlayAbsorb() {
-        frisbeeAudioSource.PlayOneShot(frisbeeAbsorb);
+        sfxSource.PlayOneShot(frisbeeAbsorb);
     }
 
     /*********************
@@ -70,16 +72,24 @@ public class SoundManager : MonoBehaviour
     public void PlayFrisbeePrompt()
     {
         //print("something");
-        queuedTracks.Add(4, lostFrisbeeLines[0]);
+        if (playedIntro) {
+            queuedTracks.Add(3, newPlaceLines[0]);
+            SoundManager.instance.HexLine();
+        }
+        else {
+            queuedTracks.Add(4, lostFrisbeeLines[0]);
+        }
         instance.StartCoroutine(PlayRoutine());
     }
 
     // When we grab the frisbee for the first time
     public void PlayFrisbeeGrabbed()
     {
+        if (playedIntro) return;
         frisbeeAudioSource.Stop();
         queuedTracks.Add(2, frisbeeGrabbedLines[0]);
         instance.StopAllCoroutines();
+        playedIntro = true;
         isPlaying = false;
         instance.StartCoroutine(PlayRoutine());
     }
@@ -87,13 +97,17 @@ public class SoundManager : MonoBehaviour
     // Plays when you throw for the first time but don't suck in an item
     public void PlayItemFail()
     {
+        if (playedFail) return;
         queuedTracks.Add(6, failedItem);
+        playedFail = true;
     }
 
     // Plays when you throw for the first time and do suck in an item
     public void PlayItemSucceed()
     {
+        if (playedSuccess) return;
         queuedTracks.Add(5, successfulItem);
+        playedSuccess = true;
     }
     
     // Plays on occasion in the trash room
@@ -142,6 +156,7 @@ public class SoundManager : MonoBehaviour
             // When we play ending, empty the queue
             case "14 Ending":
             // We just entered the hex room
+                print("ending");
                 queuedTracks = new SortedList<int, AudioClip>();
                 StartCoroutine(PlayClip(toPlay));
                 break;
@@ -153,7 +168,7 @@ public class SoundManager : MonoBehaviour
                 break;
 
             // We grabbed the frisbee for the first time
-            case "5 Grabbed":
+            case "4 Hello":
                 queuedTracks = new SortedList<int, AudioClip>();
                 StartCoroutine(PlayInSuccession(frisbeeGrabbedLines));
                 break;
@@ -167,6 +182,7 @@ public class SoundManager : MonoBehaviour
             case "8 Success":
             // We just failed to suck up an item
             case "9 Fail":
+            print("frisbeecall");
                 StartCoroutine(PlayClip(toPlay));
                 break;
 
@@ -196,6 +212,7 @@ public class SoundManager : MonoBehaviour
 
     IEnumerator PlayClip(AudioClip clip)
     {
+        print("playclip");
         isPlaying = true;
         instance.StopAllCoroutines();
         frisbeeAudioSource.PlayOneShot(clip);
@@ -224,8 +241,12 @@ public class SoundManager : MonoBehaviour
     {
         isPlaying = true;
         instance.StopAllCoroutines();
-        foreach (AudioClip clip in listToPlay) {
+        int curr = 0;
+        int len = listToPlay.Count;
+        while (curr < len) {
+            AudioClip clip = listToPlay[curr];
             frisbeeAudioSource.PlayOneShot(clip);
+            //TODO: returns from the loop!!!
             yield return new WaitForSeconds(clip.length);
         }
 

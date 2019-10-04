@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     bool won = false;
     bool disableGravity = false;
     bool broadcastGravityDisabled = false;
+    bool playingEnd = false;
 
     // GameObject Components
     // Player is currently just the right glove!
@@ -76,14 +77,19 @@ public class GameManager : MonoBehaviour
             won = false;
             SceneManager.LoadScene(startScene);
         }
-        if ((destroyedObjects >= 1000 && !won) || Input.GetButtonUp("Fire3")) {
+        if ((destroyedObjects >= 2000 && !won) || Input.GetButtonUp("Fire3")) {
             if (SceneManager.GetActiveScene().name == startScene) {
                 SoundManager.instance.PlayTrashFinish();
                 won = true;
                 StartCoroutine(blackOutScreen());
             }
             else /* we want ending to play */ {
-                SoundManager.instance.PlayEnding();
+                if (!playingEnd) {
+                    SoundManager.instance.PlayEnding();
+                    playingEnd = true;
+                    won = true;
+                    StartCoroutine(blackOutScreen());
+                }
             }
         }
     }
@@ -91,33 +97,47 @@ public class GameManager : MonoBehaviour
     IEnumerator blackOutScreen(){
         // Tutorial.PlayWarning();
         //black out screen
-        SteamVR_Fade.Start(Color.black, 7.0f);
-        //GetComponent<SteamVR_LoadLevel>().levelName = "Hexagon";
-        //GetComponent<SteamVR_LoadLevel>().Trigger();
-        yield return new WaitForSeconds(7);
-        Application.backgroundLoadingPriority = ThreadPriority.Low;
-        AsyncOperation AO = SceneManager.LoadSceneAsync(endScene); 
-        AO.allowSceneActivation = false;
-
-        //frisbee.transform.position = frisbeePlaceToMove;
-        //cameraRig.transform.position = placeToMove;
-        //SceneManager.LoadScene("Hexagon");
-        //SteamVR_Fade.Start(Color.clear, 2.0f);
-        
-        while(AO.progress < 0.9f)
-        {
-            yield return null;
+        if (SceneManager.GetActiveScene().name == endScene) {
+            yield return new WaitForSeconds(5);
+            SteamVR_Fade.Start(Color.black, 5.0f);
+            yield return new WaitForSeconds(5.0f);
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
         }
-        AO.allowSceneActivation = true;
-        destroyedObjects = 0;
-        won = false;   
-        disableGravity = false;
-        broadcastGravityDisabled = false;
+        else {
+            yield return new WaitForSeconds(10);
+            SteamVR_Fade.Start(Color.black, 7.0f);
+            yield return new WaitForSeconds(7.0f);
+            //GetComponent<SteamVR_LoadLevel>().levelName = "Hexagon";
+            //GetComponent<SteamVR_LoadLevel>().Trigger();
+            // yield return new WaitForSeconds(7);
+            Application.backgroundLoadingPriority = ThreadPriority.Low;
+            AsyncOperation AO = SceneManager.LoadSceneAsync(endScene); 
+            AO.allowSceneActivation = false;
 
-        // TODO: move these to a SOLID start of the new room!
-        SoundManager.instance.PlayHexEntrance();
-        SoundManager.instance.HexLine();
+            //frisbee.transform.position = frisbeePlaceToMove;
+            //cameraRig.transform.position = placeToMove;
+            //SceneManager.LoadScene("Hexagon");
+            //SteamVR_Fade.Start(Color.clear, 2.0f);
+            
+            while(AO.progress < 0.9f)
+            {
+                yield return null;
+            }
+            AO.allowSceneActivation = true;
+            destroyedObjects = 0;
+            won = false;   
+            disableGravity = false;
+            broadcastGravityDisabled = false;
 
-        //SceneManager.UnloadSceneAsync(startScene);
+            // TODO: move these to a SOLID start of the new room!
+            // SoundManager.instance.PlayHexEntrance();
+            SoundManager.instance.HexLine();
+
+            //SceneManager.UnloadSceneAsync(startScene);
+        }
     }
 }

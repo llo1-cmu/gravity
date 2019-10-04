@@ -892,6 +892,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 5
+  pointValue: 5
 --- !u!1 &6905547762441300001
 GameObject:
   m_ObjectHideFlags: 0

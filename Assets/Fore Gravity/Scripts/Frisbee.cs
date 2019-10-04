@@ -27,7 +27,8 @@ public class Frisbee : MonoBehaviour
     [SerializeField] private Transform mainCamera;
 
     // Recall things
-    private bool recalling, introScene;
+    private bool recalling;
+    private static bool introScene = true;
     private Vector3 recallStartPosition;
     private float recallStartTime;
     [SerializeField] private float recallSpeed = 10.0f;
@@ -42,7 +43,7 @@ public class Frisbee : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         velocityEstimator = GetComponent<Valve.VR.InteractionSystem.VelocityEstimator>();
         SoundManager.instance.PlayFrisbeePrompt();
-        introScene = true;
+        //introScene = true;
     }
 
     void Update()

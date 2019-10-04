@@ -15,6 +15,7 @@ public class GravityField : MonoBehaviour
 
     public bool firstItemFailed = false;
     private SphereCollider _Collider;
+    [SerializeField] GameObject orbtoScale;
 
     private void Start()
     {
@@ -57,8 +58,10 @@ public class GravityField : MonoBehaviour
     // }
 
     public void IncreaseGravityField(){
-        if (_Collider.radius > 0.2) return;
+        if (_Collider.radius > 0.4) return;
         _Collider.radius *= increaseFactor;
+        if (orbtoScale.transform.localScale.x >= 2) return;
+        orbtoScale.transform.localScale *= 1.005f;
 
         // ParticleSystem.ShapeModule shapeModule = transform.GetChild(0).GetComponent <ParticleSystem> ().shape;
         // Normalize increase of particle system
