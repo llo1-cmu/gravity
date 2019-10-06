@@ -33,6 +33,8 @@ public class Frisbee : MonoBehaviour
     private float recallStartTime;
     [SerializeField] private float recallSpeed = 10.0f;
     [SerializeField] private Material originalMaterial, recallMaterial;
+    [SerializeField] private MeshRenderer[] frisbeeRim;
+    [SerializeField] private Material rimOriginalMat, rimRecallMat;
 
     // Sound manager bools
     private bool firstCaughtPlayed, firstItemSuccess;
@@ -68,6 +70,9 @@ public class Frisbee : MonoBehaviour
             velocityEstimator.BeginEstimatingVelocity();
             SoundManager.instance.PlayRecall();
             FrisbeeSphere.material = recallMaterial;
+            foreach(MeshRenderer renderer in frisbeeRim){
+                renderer.material = rimRecallMat;
+            }
         }
         else if (introScene) {
             // Frisbee drifts towards player
@@ -173,6 +178,9 @@ public class Frisbee : MonoBehaviour
         velocityEstimator.BeginEstimatingVelocity();
         SoundManager.instance.PlayFrisbeeCatch();
         FrisbeeSphere.material = originalMaterial;
+        foreach(MeshRenderer renderer in frisbeeRim){
+            renderer.material = rimOriginalMat;
+        }
         gravityField.SetActive(false);
 
         if(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource)){
