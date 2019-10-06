@@ -7,7 +7,8 @@ public class ReactorButton : MonoBehaviour
 {
     // Assign doors in the inspector
     [SerializeField] private GameObject blockingPlane;
-    [SerializeField] private GameObject lightSection;
+    [SerializeField] private GameObject lightOn;
+    [SerializeField] private GameObject lightOff;
     DestroyableObj _DestroyableObj;
     void Start()
     {
@@ -17,7 +18,8 @@ public class ReactorButton : MonoBehaviour
 
     private void OpenBlock(){
         blockingPlane.SetActive(false);
-        lightSection.SetActive(false);
+        lightOn.SetActive(true);
+        lightOff.SetActive(false);
         
     }
 
