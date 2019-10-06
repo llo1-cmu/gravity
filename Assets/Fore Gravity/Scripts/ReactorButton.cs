@@ -27,13 +27,15 @@ public class ReactorButton : MonoBehaviour
     private void OpenBlock(){
         blockingPlane.SetActive(false);
         // Attempt at fade, comment in to try and get fade.
+        Debug.Log(lightsOnArray.Length);
         foreach (Light child in lightsOnArray)
         {
-            FadeIn(child);
+            SoundManager.instance.StartCoroutine(FadeIn(child));
+            
         }
         foreach (Light child in lightsOffArray)
         {
-            FadeOut(child);
+            SoundManager.instance.StartCoroutine(FadeOut(child));
         }
         // Turns sections of light on and off. Use this if script breaks.
         //lightOn.SetActive(true);
@@ -55,18 +57,19 @@ public class ReactorButton : MonoBehaviour
     // Should fade lights in.
     IEnumerator FadeIn(Light lt)
     {
-       
+        Debug.Log("in fade in");
         float interval = 0.1f; //interval time between iterations of while loop
         lt.intensity = 0.0f;
         while (lt.intensity <= 3.0f)
         {
+            Debug.Log("in fade loop");
             lt.intensity += 0.02f;
             yield return new WaitForSeconds(interval);//the coroutine will wait for 0.2 secs
         }
     }
 
     // Should fade lights out. 
-    IEnumerable FadeOut(Light lt)
+    IEnumerator FadeOut(Light lt)
     {
         float interval = 0.1f;
         lt.intensity = 3.0f;
