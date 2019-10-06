@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: df6d876d0e5bc474caacdfb1152ac6ab,
         type: 3}
       propertyPath: m_Name
-      value: reactorSign
+      value: reactorSignPre
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: df6d876d0e5bc474caacdfb1152ac6ab,
         type: 3}
@@ -67,5 +67,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: df6d876d0e5bc474caacdfb1152ac6ab,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8d2def8922c90481a92a8d8b72181e15, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df6d876d0e5bc474caacdfb1152ac6ab, type: 3}
