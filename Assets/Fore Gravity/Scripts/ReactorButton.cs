@@ -11,28 +11,33 @@ public class ReactorButton : MonoBehaviour
     [SerializeField] private Transform lightOffT;
     [SerializeField] private GameObject lightOn;
     [SerializeField] private GameObject lightOff;
-
+    private Light[] lightsOnArray;
+    private Light[] lightsOffArray;
     DestroyableObj _DestroyableObj;
+
     void Start()
     {
         blockingPlane.SetActive(true);
         _DestroyableObj = this.GetComponent<DestroyableObj>();
+        lightsOnArray = lightOn.GetComponentsInChildren<Light>();
+        lightsOffArray = lightOff.GetComponentsInChildren<Light>();
+
     }
 
     private void OpenBlock(){
         blockingPlane.SetActive(false);
         // Attempt at fade, comment in to try and get fade.
-        /* foreach (Light child in lightOnT)
+        foreach (Light child in lightsOnArray)
         {
             FadeIn(child);
         }
-        foreach (Light child in lightOffT)
+        foreach (Light child in lightsOffArray)
         {
             FadeOut(child);
-        }*/
+        }
         // Turns sections of light on and off. Use this if script breaks.
-        lightOn.SetActive(true);
-        lightOff.SetActive(false);
+        //lightOn.SetActive(true);
+        //lightOff.SetActive(false);
         
     }
 
