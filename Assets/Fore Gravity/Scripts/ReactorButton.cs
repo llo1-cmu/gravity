@@ -57,12 +57,10 @@ public class ReactorButton : MonoBehaviour
     // Should fade lights in.
     IEnumerator FadeIn(Light lt)
     {
-        Debug.Log("in fade in");
         float interval = 0.1f; //interval time between iterations of while loop
         lt.intensity = 0.0f;
         while (lt.intensity <= 3.0f)
         {
-            Debug.Log("in fade loop");
             lt.intensity += 0.02f;
             yield return new WaitForSeconds(interval);//the coroutine will wait for 0.2 secs
         }

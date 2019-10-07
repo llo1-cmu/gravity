@@ -26,7 +26,7 @@ public class DestroyableObj : MonoBehaviour
     protected SkinnedMeshRenderer[] existingSkinnedRenderers;
     protected static Material highlightMat;
     /* End copied code */
-    private bool highlighted;
+    private bool highlighted, gravityDisabled;
     void Start(){
         rigidbody = GetComponent<Rigidbody>();
         renderer = GetComponent<Renderer>();
@@ -48,11 +48,11 @@ public class DestroyableObj : MonoBehaviour
     }
 
     void Update() {
-        if (GameManager.S.GetBroadcastGravityDisabled()) {
+        if (GameManager.S.GetBroadcastGravityDisabled() && !gravityDisabled) {
             rigidbody.useGravity = false;
             rigidbody.isKinematic = false;
             useGravity = false;
-            return;
+            gravityDisabled = true;
         }
         if (GameManager.S.GetDestroyedScore() >= threshold){
             if(!highlighted){
