@@ -35,7 +35,6 @@ public class Siren : MonoBehaviour
         lightSource.intensity = 5;
         if (sirenSource != null)
         {
-            Debug.Log("PlaySound");
             sirenSource.Play();
             sirenSource.loop = true;
         }
