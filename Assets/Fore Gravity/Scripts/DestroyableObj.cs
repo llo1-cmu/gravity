@@ -99,30 +99,37 @@ public class DestroyableObj : MonoBehaviour
 
         // Suspend enviornmental gravity when being pulled by the frisbee
         if (other.tag == "gravity field" && GameManager.S.GetDestroyedScore() >= threshold) {
-            if(rigidBodyExists)
+            //if(rigidBodyExists)
             //TODO: add cooler shader effect here
             // if(renderer){
             //     renderer.material.color = Color.black;
             // }
-            if(rigidBodyExists){
-                if(useGravity){
-                    rigidbody.useGravity = false;
+            RaycastHit hit;
+            // If there's no force field in the way
+            if(!Physics.Raycast(other.transform.position, (transform.position - other.transform.position).normalized, out hit, (transform.position - other.transform.position).magnitude, LayerMask.GetMask("Force Field"))){
+                if(rigidBodyExists){
+                    if(useGravity){
+                        rigidbody.useGravity = false;
+                    }
+                    rigidbody.isKinematic = true;
+                    //rigidbody.detectCollisions = false;
                 }
-                rigidbody.isKinematic = true;
-                //rigidbody.detectCollisions = false;
+
+                frisbee = other.transform;
+                originalPosition = transform.position;
+
+                SoundManager.instance.PlayAbsorb();
+                StartCoroutine(DisappearEffect(0.5f));
+                frisbee.GetComponentInParent<Frisbee>().IncreaseGravityField();
+                
+                GravityField gf = other.GetComponent<GravityField>();
+                if (gf.firstItemSucceed) return;
+                gf.firstItemSucceed = true;
+                SoundManager.instance.PlayItemSucceed();
             }
-
-            frisbee = other.transform;
-            originalPosition = transform.position;
-
-            SoundManager.instance.PlayAbsorb();
-            StartCoroutine(DisappearEffect(0.5f));
-            frisbee.GetComponentInParent<Frisbee>().IncreaseGravityField();
-            
-            GravityField gf = other.GetComponent<GravityField>();
-            if (gf.firstItemSucceed) return;
-            gf.firstItemSucceed = true;
-            SoundManager.instance.PlayItemSucceed();
+            else{
+                print("Obstructed by force field: " + hit.transform.name);
+            }
         }
 
         // Play fail-to-absorb sound if we haven't already

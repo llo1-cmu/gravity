@@ -34,7 +34,8 @@ public class Frisbee : MonoBehaviour
     [SerializeField] private float recallSpeed = 10.0f;
     [SerializeField] private Material originalMaterial, recallMaterial;
     [SerializeField] private MeshRenderer[] frisbeeRim;
-    [SerializeField] private Material rimOriginalMat, rimRecallMat;
+    [SerializeField] private Material rimRecallMat;
+    private Material[] rimOriginalMats;
 
     // Sound manager bools
     private bool firstCaughtPlayed;
@@ -46,6 +47,10 @@ public class Frisbee : MonoBehaviour
         velocityEstimator = GetComponent<Valve.VR.InteractionSystem.VelocityEstimator>();
         SoundManager.instance.PlayFrisbeePrompt();
         // introScene = false;
+        rimOriginalMats = new Material[frisbeeRim.Length];
+        for(int i = 0; i < frisbeeRim.Length; i++){
+            rimOriginalMats[i] = frisbeeRim[i].material;
+        }
     }
 
     void Update()
@@ -107,8 +112,11 @@ public class Frisbee : MonoBehaviour
             rigidbody.velocity = velocityEstimator.GetVelocityEstimate();
             // Restore material
             FrisbeeSphere.material = originalMaterial;
-            foreach(MeshRenderer renderer in frisbeeRim){
-                renderer.material = rimOriginalMat;
+            // foreach(MeshRenderer renderer in frisbeeRim){
+            //     renderer.material = rimOriginalMat;
+            // }
+            for(int i = 0; i < frisbeeRim.Length; i++){
+                frisbeeRim[i].material = rimOriginalMats[i];
             }
         }
         else if (!recalling && recordingPos){
@@ -194,8 +202,11 @@ public class Frisbee : MonoBehaviour
         velocityEstimator.BeginEstimatingVelocity();
         SoundManager.instance.PlayFrisbeeCatch();
         FrisbeeSphere.material = originalMaterial;
-        foreach(MeshRenderer renderer in frisbeeRim){
-            renderer.material = rimOriginalMat;
+        // foreach(MeshRenderer renderer in frisbeeRim){
+        //     renderer.material = rimOriginalMat;
+        // }
+        for(int i = 0; i < frisbeeRim.Length; i++){
+
         }
         gravityField.SetActive(false);
 
