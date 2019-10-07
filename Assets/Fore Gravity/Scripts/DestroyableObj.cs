@@ -119,6 +119,7 @@ public class DestroyableObj : MonoBehaviour
             StartCoroutine(DisappearEffect(0.5f));
             frisbee.GetComponentInParent<Frisbee>().IncreaseGravityField();
             
+            GravityField gf = other.GetComponent<GravityField>();
             if (gf.firstItemSucceed) return;
             gf.firstItemSucceed = true;
             SoundManager.instance.PlayItemSucceed();
