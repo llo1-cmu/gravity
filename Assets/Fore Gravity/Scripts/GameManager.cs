@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
         if ((destroyedObjects >= 2000 && !won) || Input.GetButtonUp("Fire3")) {
             if (SceneManager.GetActiveScene().name == startScene) {
                 SoundManager.instance.PlayTrashFinish();
-                siren.GetComponent<Siren>().Activate();
+                //siren.GetComponent<Siren>().Activate();
                 won = true;
                 StartCoroutine(blackOutScreen());
             }

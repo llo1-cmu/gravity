@@ -5,9 +5,9 @@ using UnityEngine;
 public class Siren : MonoBehaviour
 {
 
-    [SerializeField] private float speed; //In degrees per second, can be negative to spin other direction
+    [SerializeField] private float speed=2; //In degrees per second, can be negative to spin other direction
     [SerializeField] private bool isTriggered;
-    [SerializeField] GameObject lightSource;
+    [SerializeField] Light lightSource;
     [SerializeField] AudioSource sirenSource;
 
     private float currentRotationY = 0;
@@ -31,9 +31,11 @@ public class Siren : MonoBehaviour
 
     void sirenStart()
     {
-        lightSource.SetActive(true);
+        
+        lightSource.intensity = 5;
         if (sirenSource != null)
         {
+            Debug.Log("PlaySound");
             sirenSource.Play();
             sirenSource.loop = true;
         }
@@ -43,7 +45,7 @@ public class Siren : MonoBehaviour
     
     void Spin()
     {
-        transform.Rotate(new Vector3(0, speed * Time.deltaTime, 0), Space.World);
+        lightSource.transform.Rotate(new Vector3(0, speed * Time.deltaTime, 0), Space.World);
     }
 
     public void Activate()

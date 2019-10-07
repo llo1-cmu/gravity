@@ -12,6 +12,7 @@ TagManager:
   - UI Button
   - gravity field
   - Disable Gravity
+  - Force Field
   layers:
   - Default
   - TransparentFX

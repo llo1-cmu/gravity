@@ -28,7 +28,7 @@ public class Frisbee : MonoBehaviour
 
     // Recall things
     private bool recalling;
-    private static bool introScene = true;
+    private static bool introScene = false;
     private Vector3 recallStartPosition;
     private float recallStartTime;
     [SerializeField] private float recallSpeed = 10.0f;
@@ -45,7 +45,7 @@ public class Frisbee : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         velocityEstimator = GetComponent<Valve.VR.InteractionSystem.VelocityEstimator>();
         SoundManager.instance.PlayFrisbeePrompt();
-        introScene = true;
+        // introScene = false;
     }
 
     void Update()
@@ -77,7 +77,7 @@ public class Frisbee : MonoBehaviour
         }
         else if (introScene) {
             // Frisbee drifts towards player
-            transform.position = Vector3.MoveTowards(transform.position, GameManager.S.player.transform.position, 0.0008f);
+            transform.position = Vector3.MoveTowards(transform.position, GameManager.S.player.transform.position, 0.01f);
         }
         else if(recalling && (SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Non-physical recall
