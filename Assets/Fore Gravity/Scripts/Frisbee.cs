@@ -206,7 +206,7 @@ public class Frisbee : MonoBehaviour
         //     renderer.material = rimOriginalMat;
         // }
         for(int i = 0; i < frisbeeRim.Length; i++){
-
+            frisbeeRim[i].material = rimOriginalMats[i];
         }
         gravityField.SetActive(false);
 
