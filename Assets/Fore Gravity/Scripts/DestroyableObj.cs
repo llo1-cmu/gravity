@@ -118,6 +118,10 @@ public class DestroyableObj : MonoBehaviour
             SoundManager.instance.PlayAbsorb();
             StartCoroutine(DisappearEffect(0.5f));
             frisbee.GetComponentInParent<Frisbee>().IncreaseGravityField();
+            
+            if (gf.firstItemSucceed) return;
+            gf.firstItemSucceed = true;
+            SoundManager.instance.PlayItemSucceed();
         }
 
         // Play fail-to-absorb sound if we haven't already

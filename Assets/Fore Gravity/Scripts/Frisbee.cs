@@ -37,7 +37,7 @@ public class Frisbee : MonoBehaviour
     [SerializeField] private Material rimOriginalMat, rimRecallMat;
 
     // Sound manager bools
-    private bool firstCaughtPlayed, firstItemSuccess;
+    private bool firstCaughtPlayed;
     #pragma warning restore 0649
 
     void Start()
@@ -45,7 +45,7 @@ public class Frisbee : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         velocityEstimator = GetComponent<Valve.VR.InteractionSystem.VelocityEstimator>();
         SoundManager.instance.PlayFrisbeePrompt();
-        //introScene = true;
+        introScene = true;
     }
 
     void Update()
@@ -54,9 +54,11 @@ public class Frisbee : MonoBehaviour
             // Trigger pulled when frisbee not on hand => Recall 
             if(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource)){
                 attachedController = rightController;
+                SoundManager.instance.PlayRecallRight();
             }
             else{
                 attachedController = leftController;
+                SoundManager.instance.PlayRecallLeft();
             }
             // Initialize the recall
             rigidbody.useGravity = false;
@@ -68,7 +70,6 @@ public class Frisbee : MonoBehaviour
             //rigidbody.velocity = Vector3.zero;
             // Also estimate the velocity
             velocityEstimator.BeginEstimatingVelocity();
-            SoundManager.instance.PlayRecall();
             FrisbeeSphere.material = recallMaterial;
             foreach(MeshRenderer renderer in frisbeeRim){
                 renderer.material = rimRecallMat;
@@ -143,10 +144,10 @@ public class Frisbee : MonoBehaviour
             gravityField.SetActive(true);
         }
 
-        if(!firstItemSuccess /*&& Tutorial.IsTutorial()*/ && GameManager.S.GetDestroyedScore() > 0){
-            SoundManager.instance.PlayItemSucceed();
-            firstItemSuccess = true;
-        }
+        // if(!firstItemSuccess /*&& Tutorial.IsTutorial()*/ && GameManager.S.GetDestroyedScore() > 0){
+        //     SoundManager.instance.PlayItemSucceed();
+        //     firstItemSuccess = true;
+        // }
     }
 
     void OnTriggerEnter(Collider other){
@@ -162,6 +163,9 @@ public class Frisbee : MonoBehaviour
                 break;
             case "UI Button":
                 other.GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+                break;
+            case "Force Field":
+                SoundManager.instance.PlayForceFieldRebound();
                 break;
             default:
                 break;

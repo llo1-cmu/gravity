@@ -17,6 +17,7 @@ public class ReactorButton : MonoBehaviour
 
     [SerializeField] private GameObject siren;
     [SerializeField] private GameObject siren2;
+    [SerializeField] private AudioSource sparkAudioSource;
 
 
     void Start()
@@ -48,10 +49,6 @@ public class ReactorButton : MonoBehaviour
             siren2.GetComponent<Siren>().Activate();
         }
             
-      
-
-        
-
         // Turns sections of light on and off. Use this if script breaks.
         //lightOn.SetActive(true);
         //lightOff.SetActive(false);
@@ -61,6 +58,7 @@ public class ReactorButton : MonoBehaviour
     void OnTriggerEnter(Collider other){
         if (other.tag == "gravity field" && GameManager.S.GetDestroyedScore() >= _DestroyableObj.GetThreshold()) {
             OpenBlock();
+            SoundManager.instance.PlaySpark(sparkAudioSource);
 
             // If we want to disable gravity on all objects
             if (this.tag == "Disable Gravity") {

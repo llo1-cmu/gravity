@@ -14,6 +14,7 @@ public class GravityField : MonoBehaviour
     #pragma warning restore 0649
 
     public bool firstItemFailed = false;
+    public bool firstItemSucceed = false;
     private SphereCollider _Collider;
     [SerializeField] GameObject orbtoScale;
 

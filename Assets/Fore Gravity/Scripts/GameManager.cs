@@ -138,8 +138,7 @@ public class GameManager : MonoBehaviour
             broadcastGravityDisabled = false;
 
             // TODO: move these to a SOLID start of the new room!
-            // SoundManager.instance.PlayHexEntrance();
-            SoundManager.instance.HexLine();
+            SoundManager.instance.PlayHexAmbience();
 
             //SceneManager.UnloadSceneAsync(startScene);
         }
