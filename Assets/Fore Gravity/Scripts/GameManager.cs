@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour
     // [SerializeField] private GameObject frisbee;
     // [SerializeField] private GameObject winScreen;
     // [SerializeField] private GameObject cameraRig;
+
+    [SerializeField] private GameObject siren;
+
     #pragma warning restore 0649
 
     void Awake(){
@@ -80,6 +83,7 @@ public class GameManager : MonoBehaviour
         if ((destroyedObjects >= 2000 && !won) || Input.GetButtonUp("Fire3")) {
             if (SceneManager.GetActiveScene().name == startScene) {
                 SoundManager.instance.PlayTrashFinish();
+                siren.GetComponent<Siren>().Activate();
                 won = true;
                 StartCoroutine(blackOutScreen());
             }

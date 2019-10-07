@@ -15,6 +15,10 @@ public class ReactorButton : MonoBehaviour
     private Light[] lightsOffArray;
     DestroyableObj _DestroyableObj;
 
+    [SerializeField] private GameObject siren;
+    [SerializeField] private GameObject siren2;
+
+
     void Start()
     {
         blockingPlane.SetActive(true);
@@ -31,12 +35,23 @@ public class ReactorButton : MonoBehaviour
         foreach (Light child in lightsOnArray)
         {
             SoundManager.instance.StartCoroutine(FadeIn(child));
-            
+
         }
         foreach (Light child in lightsOffArray)
         {
             SoundManager.instance.StartCoroutine(FadeOut(child));
         }
+      
+        if (siren != null)
+        {
+            siren.GetComponent<Siren>().Activate();
+            siren2.GetComponent<Siren>().Activate();
+        }
+            
+      
+
+        
+
         // Turns sections of light on and off. Use this if script breaks.
         //lightOn.SetActive(true);
         //lightOff.SetActive(false);

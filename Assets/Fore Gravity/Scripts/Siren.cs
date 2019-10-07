@@ -7,6 +7,8 @@ public class Siren : MonoBehaviour
 
     [SerializeField] private float speed; //In degrees per second, can be negative to spin other direction
     [SerializeField] private bool isTriggered;
+    [SerializeField] GameObject lightSource;
+    [SerializeField] AudioSource sirenSource;
 
     private float currentRotationY = 0;
 
@@ -21,8 +23,22 @@ public class Siren : MonoBehaviour
     {
         if (isTriggered)
         {
+            
             Spin();
+
         }
+    }
+
+    void sirenStart()
+    {
+        lightSource.SetActive(true);
+        if (sirenSource != null)
+        {
+            sirenSource.Play();
+            sirenSource.loop = true;
+        }
+       
+
     }
     
     void Spin()
@@ -33,6 +49,8 @@ public class Siren : MonoBehaviour
     public void Activate()
     {
         isTriggered = true;
+  
+        sirenStart();
     } 
 
     public void Deactivate()
