@@ -92,12 +92,23 @@ public class Frisbee : MonoBehaviour
         }
         else if(recalling && !(SteamVR_Actions._default.GrabPinch.GetState(RightInputSource) || SteamVR_Actions._default.GrabPinch.GetState(LeftInputSource))){
             // Recall cancelled (dropped)
+            if(attachedController == rightController){
+                vibration.Execute(0.0f, 0.1f, 20.0f, 0.1f, RightInputSource);
+            }
+            else if(attachedController == leftController){
+                vibration.Execute(0.0f, 0.1f, 20.0f, 0.1f, LeftInputSource);
+            }
             recalling = false;
             rigidbody.useGravity = true;
             attachedController = null;
             // Apply estimated velocity
             velocityEstimator.FinishEstimatingVelocity();
             rigidbody.velocity = velocityEstimator.GetVelocityEstimate();
+            // Restore material
+            FrisbeeSphere.material = originalMaterial;
+            foreach(MeshRenderer renderer in frisbeeRim){
+                renderer.material = rimOriginalMat;
+            }
         }
         else if (!recalling && recordingPos){
             frisbeePositions.Add(transform.position);
