@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//TODO: reassign ship source in big trash room, add "Force Field" tag to force fields, assign hex ambience and other sounds
-// Reactor button - add trigger for play gravity noises
-// reactor button - add field for disablegravity
-// attach script and add collider to sign
 
     // GM tier system - if object is last tier don't remove gravity
-    // - play gravity  noises from player when gravity explosion happens
-    // - when sucked up, plays noise per object if collides w/ other object
+    // ------> each object registers its tier with GM. GM finds max tier as well as # of objects in each tier, as well as point value given by object in each tier. 
+    // ------> threshold per tier is curve : need more and more objects as we go up in tiers. increase factor is 2^(-(n-1)) where n is number of tiers. After we level up each tier, multiply increase factor by 2. Tiers start at 0.
+    // ---------> fix big reactor so doesn't go flying at you (in DestroyableObj if this is not the last tier)
+
+    // - when sucked up or gravity explosion, plays noise per object if collides w/ other object
+    // ----> pitch scales with point score (normalize /max point score, * 1-score)
 
 public class SoundManager : MonoBehaviour
 {
