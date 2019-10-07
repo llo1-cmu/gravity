@@ -182,6 +182,7 @@ public class Frisbee : MonoBehaviour
                 attachedController = leftController;
             }
         }
+        attachedController.GetComponent<AudioSource>().Stop();
         recalling = false;
         rigidbody.velocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero;

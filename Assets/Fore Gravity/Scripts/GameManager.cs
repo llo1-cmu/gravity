@@ -68,6 +68,10 @@ public class GameManager : MonoBehaviour
         disableGravity = true;
     }
 
+    public void BroadcastGravityDisabledTemp(bool b) {
+        broadcastGravityDisabled = b;
+    }
+
     public bool GetBroadcastGravityDisabled() {
         return broadcastGravityDisabled;
     }

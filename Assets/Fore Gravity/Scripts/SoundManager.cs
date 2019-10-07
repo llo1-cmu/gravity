@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//TODO: reassign ship source, controller source, spark audio source in sound maanger/reactor scripts, add "Force Field" tag to force fields
-    // GM tier system - if object is last tier don't remove gravity
+//TODO: reassign ship source in big trash room, add "Force Field" tag to force fields, assign hex ambience and other sounds
+// Reactor button - add trigger for play gravity noises
+// reactor button - add field for disablegravity
+// attach script and add collider to sign
 
-    // green sign flips and turns red, plays gravity compactor on/off
+    // GM tier system - if object is last tier don't remove gravity
     // - play gravity  noises from player when gravity explosion happens
     // - when sucked up, plays noise per object if collides w/ other object
 
@@ -15,7 +17,7 @@ public class SoundManager : MonoBehaviour
     // 4 lostfrisbeelines, 5 success, 6 fail, 7 trashroomlines, 8 hexroomlines
     #pragma warning disable 0649
     [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource, sfxSource, leftControllerAudioSource, rightControllerAudioSource;
-    [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeRecallController, frisbeeAbsorb, frisbeeCatch, sparkSound, gravityOn, gravityOff, forceFieldRebound;
+    [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeRecallController, frisbeeAbsorb, frisbeeCatch, sparkSound, gravityOn, gravityOff, forceFieldRebound, explosionSounds, hexAmbience;
     //beta clips 1-4
     [SerializeField] List<AudioClip> lostFrisbeeLines;
     //beta clip 5-7 
@@ -31,7 +33,7 @@ public class SoundManager : MonoBehaviour
     // beta 12, beta 14
     // newPlace first line in hexroom, ending last line
     [SerializeField] List<AudioClip> newPlaceLines;
-    [SerializeField] AudioClip ending, hexAmbience;
+    [SerializeField] AudioClip ending;
     // beta 13
     [SerializeField] List<AudioClip> hexRoomLines;
 
@@ -41,7 +43,6 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
     static bool playedIntro = false;
     static bool playedSuccess = false;
-    static bool playedFail = false;
     static bool isTrashRoom = false;
     #pragma warning restore 0649
 
@@ -88,6 +89,10 @@ public class SoundManager : MonoBehaviour
         AudioSource.PlayClipAtPoint(hexAmbience, transform.position);
     }
 
+    public void PlayExplosionNoises() {
+        AudioSource.PlayClipAtPoint(explosionSounds, transform.position);
+    }
+
     public void PlayGravity(bool on) {
         shipAudioSource.Stop();
         if (on) shipAudioSource.PlayOneShot(gravityOn);
@@ -131,11 +136,10 @@ public class SoundManager : MonoBehaviour
     // Plays when you throw for the first time but don't suck in an item
     public void PlayItemFail()
     {
-        if (playedFail) return;
+        if (playedSuccess) return;
         frisbeeAudioSource.Stop();
         instance.StopAllCoroutines();
         queuedTracks.Add(6, failedItem);
-        playedFail = true;
         isPlaying = false;
         instance.StartCoroutine(PlayRoutine());
     }
