@@ -46,6 +46,7 @@ public class Frisbee : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         velocityEstimator = GetComponent<Valve.VR.InteractionSystem.VelocityEstimator>();
         SoundManager.instance.PlayFrisbeePrompt();
+        SoundManager.instance.PlayRoomAmbience();
         // introScene = false;
         rimOriginalMats = new Material[frisbeeRim.Length];
         for(int i = 0; i < frisbeeRim.Length; i++){
@@ -174,6 +175,9 @@ public class Frisbee : MonoBehaviour
                 break;
             case "Force Field":
                 SoundManager.instance.PlayForceFieldRebound();
+                break;
+            case "Wall":
+                SoundManager.instance.PlayWallRebound();
                 break;
             default:
                 break;

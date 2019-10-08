@@ -284,9 +284,11 @@ MonoBehaviour:
   gravityOn: {fileID: 8300000, guid: 41a811e89b2b7ec47b1ef1be6612b2ea, type: 3}
   gravityOff: {fileID: 8300000, guid: 3b6de25731241f74990db693692f8f94, type: 3}
   forceFieldRebound: {fileID: 8300000, guid: 487a4927f31ab3e4b9ae7c588cd97aad, type: 3}
+  wallRebound: {fileID: 8300000, guid: ddccda7ad9ccfcc46a3ad8cd29d79eae, type: 3}
   explosionSounds: {fileID: 8300000, guid: 185f2ddcb738eb94dbcc50ad98d8a200, type: 3}
-  hexAmbience: {fileID: 8300000, guid: 61487885bab73b24bb30724b6a1c4fee, type: 3}
+  hexAmbience: {fileID: 8300000, guid: e1364cc01b7a7b44284fbde59265040e, type: 3}
   largeDebrisHit: {fileID: 8300000, guid: ce995a674cf16bf4aa2e75cddd024a23, type: 3}
+  trashAmbience: {fileID: 8300000, guid: 31487c68df6aab34dbabb62b9048298b, type: 3}
   lostFrisbeeLines:
   - {fileID: 8300000, guid: 2db876723a2bd844ead630b2edb6fbb9, type: 3}
   - {fileID: 8300000, guid: 430545aebf7b12c46abf052cab2dc06f, type: 3}

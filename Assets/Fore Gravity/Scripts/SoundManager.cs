@@ -8,7 +8,7 @@ public class SoundManager : MonoBehaviour
     // 4 lostfrisbeelines, 5 success, 6 fail, 7 trashroomlines, 8 hexroomlines
     #pragma warning disable 0649
     [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource, sfxSource, leftControllerAudioSource, rightControllerAudioSource;
-    [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeRecallController, frisbeeAbsorb, frisbeeCatch, sparkSound, gravityOn, gravityOff, forceFieldRebound, explosionSounds, hexAmbience, largeDebrisHit;
+    [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeRecallController, frisbeeAbsorb, frisbeeCatch, sparkSound, gravityOn, gravityOff, forceFieldRebound, wallRebound, explosionSounds, hexAmbience, largeDebrisHit, trashAmbience;
     //beta clips 1-4
     [SerializeField] List<AudioClip> lostFrisbeeLines;
     //beta clip 5-7 
@@ -76,14 +76,6 @@ public class SoundManager : MonoBehaviour
         source.PlayOneShot(sparkSound);
     }
 
-    public void PlayHexAmbience() {
-        AudioSource.PlayClipAtPoint(hexAmbience, transform.position);
-    }
-
-    // public void PlayExplosionNoises() {
-    //     AudioSource.PlayClipAtPoint(explosionSounds, transform.position);
-    // }
-
     public void PlayGravity(bool on) {
         shipAudioSource.Stop();
         if (on) shipAudioSource.PlayOneShot(gravityOn);
@@ -95,6 +87,11 @@ public class SoundManager : MonoBehaviour
         sfxSource.PlayOneShot(forceFieldRebound);
     }
 
+    public void PlayWallRebound() {
+        sfxSource.Stop();
+        sfxSource.PlayOneShot(wallRebound);
+    }
+
     public void PlayDebrisHit(AudioSource source) {
         source.PlayOneShot(largeDebrisHit);
     }
@@ -102,6 +99,15 @@ public class SoundManager : MonoBehaviour
     /*********************
         Longer Sounds
     *********************/
+
+    public void PlayRoomAmbience() {
+        if (playedIntro) {
+            AudioSource.PlayClipAtPoint(hexAmbience, transform.position);
+        } else {
+            AudioSource.PlayClipAtPoint(trashAmbience, transform.position);
+        }
+    }
+
 
     // Continue to call these until the frisbee has been grabbed as it drifts towards the player in the intro scene
     public void PlayFrisbeePrompt()

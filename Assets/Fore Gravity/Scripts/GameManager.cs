@@ -192,9 +192,6 @@ public class GameManager : MonoBehaviour
             disableGravity = false;
             broadcastGravityDisabled = false;
 
-            // TODO: move these to a SOLID start of the new room!
-            SoundManager.instance.PlayHexAmbience();
-
             //SceneManager.UnloadSceneAsync(startScene);
         }
     }
