@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     void Awake(){
         S = this;
         objectsPerTier = new Dictionary<int, int>();
+        destroyedObjectsPerTier = new Dictionary<int, int>();
     }
 
     void Start(){
@@ -144,6 +145,7 @@ public class GameManager : MonoBehaviour
             }
             else /* we want ending to play */ {
                 if (!playingEnd) {
+                    Debug.Log(maxTier);
                     SoundManager.instance.PlayEnding();
                     playingEnd = true;
                     won = true;

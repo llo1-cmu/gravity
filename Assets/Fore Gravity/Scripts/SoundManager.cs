@@ -7,7 +7,7 @@ public class SoundManager : MonoBehaviour
     //priority list: 0 ending, 1 trashroomending, 2 frisbeegrabbed, 3 newplace,
     // 4 lostfrisbeelines, 5 success, 6 fail, 7 trashroomlines, 8 hexroomlines
     #pragma warning disable 0649
-    [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource, sfxSource, leftControllerAudioSource, rightControllerAudioSource;
+    [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource, sfxSource, leftControllerAudioSource, rightControllerAudioSource, ambienceSource;
     [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeRecallController, frisbeeAbsorb, frisbeeCatch, sparkSound, gravityOn, gravityOff, forceFieldRebound, wallRebound, explosionSounds, hexAmbience, largeDebrisHit, trashAmbience;
     //beta clips 1-4
     [SerializeField] List<AudioClip> lostFrisbeeLines;
@@ -102,9 +102,9 @@ public class SoundManager : MonoBehaviour
 
     public void PlayRoomAmbience() {
         if (playedIntro) {
-            AudioSource.PlayClipAtPoint(hexAmbience, transform.position);
+            ambienceSource.PlayOneShot(hexAmbience);
         } else {
-            AudioSource.PlayClipAtPoint(trashAmbience, transform.position);
+            ambienceSource.PlayOneShot(trashAmbience);
         }
     }
 

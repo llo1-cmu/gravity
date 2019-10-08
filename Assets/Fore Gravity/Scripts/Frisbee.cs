@@ -173,12 +173,6 @@ public class Frisbee : MonoBehaviour
             case "UI Button":
                 other.GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
                 break;
-            case "Force Field":
-                SoundManager.instance.PlayForceFieldRebound();
-                break;
-            case "Wall":
-                SoundManager.instance.PlayWallRebound();
-                break;
             default:
                 break;
         }
@@ -241,11 +235,23 @@ public class Frisbee : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision collision){
-        if(collision.collider.tag == "Target Plane"){
-            Vector3 offsetVector = collision.contacts[0].point - collision.transform.position;
-            print("Plane hit: " + collision.gameObject.name);
-            print("Offset vector: " + offsetVector.ToString("f4"));
-            print("Offset distance: " + offsetVector.magnitude.ToString("f4"));
+        switch (collision.collider.tag) {
+            case "Target Plane":
+                Vector3 offsetVector = collision.contacts[0].point - collision.transform.position;
+                print("Plane hit: " + collision.gameObject.name);
+                print("Offset vector: " + offsetVector.ToString("f4"));
+                print("Offset distance: " + offsetVector.magnitude.ToString("f4"));
+                break;
+            case "Force Field":
+                SoundManager.instance.PlayForceFieldRebound();
+                Debug.Log("touched force field");
+                break;
+            case "Wall":
+                Debug.Log("touched wall");
+                SoundManager.instance.PlayWallRebound();
+                break;
+            default:
+                break;
         }
     }
 
