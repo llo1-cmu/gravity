@@ -63,14 +63,14 @@ public class ReactorButton : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other){
-        if (other.tag == "gravity field" && GameManager.S.GetDestroyedScore() >= _DestroyableObj.GetThreshold()) {
+        if (other.tag == "gravity field" && GameManager.S.GetCurrentTier() >= _DestroyableObj.GetTier()) {
             OpenBlock();
             SoundManager.instance.PlaySpark(sparkAudioSource);
 
             // If we want to disable gravity on all objects
             if (this.tag == "Disable Gravity") {
                 GameManager.S.DisableGravity();
-                SoundManager.instance.PlayExplosionNoises();
+                // SoundManager.instance.PlayExplosionNoises();
             }
         }
     }

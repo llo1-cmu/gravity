@@ -2,22 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class DestroyableObj : MonoBehaviour
 {
 
-    // Assign frisbee score threshold in inspector
+    //TODO: add destroyableobj to layer mask, add tier, add audiosource
     #pragma warning disable 0649
-    [SerializeField] private int threshold;
+    [SerializeField] private int tier;
     [SerializeField] private int pointValue = 5;
+    [SerializeField] private LayerMask destroyableObjMask;
     private bool rigidBodyExists;
     private bool useGravity;
+    private bool suckedIn = false;
     private Color matColor;
     private Vector3 originalScale;
     private Transform frisbee;
     private Vector3 originalPosition;
     #pragma warning restore 0649
+    private AudioSource audioSource;
     new Rigidbody rigidbody;
     new Renderer renderer;
+
     /* Copied from SteamVR's Interactable.cs */
     protected MeshRenderer[] highlightRenderers;
     protected MeshRenderer[] existingRenderers;
@@ -30,7 +35,10 @@ public class DestroyableObj : MonoBehaviour
     void Start(){
         rigidbody = GetComponent<Rigidbody>();
         renderer = GetComponent<Renderer>();
-        GameManager.S.AddDestroyableObject(pointValue);
+        audioSource = GetComponent<AudioSource>();
+
+        GameManager.S.AddTieredObject(tier);
+
         if(rigidbody){
             rigidBodyExists = true;
         }
@@ -43,18 +51,20 @@ public class DestroyableObj : MonoBehaviour
         originalScale = transform.localScale;
     }
 
-    public int GetThreshold(){
-        return threshold;
+    public int GetTier(){
+        return tier;
     }
+    
 
     void Update() {
-        if (GameManager.S.GetBroadcastGravityDisabled() && !gravityDisabled) {
+        // If gravity is disabled and we aren't the max tier (aka final reactor)
+        if (GameManager.S.GetBroadcastGravityDisabled() && !gravityDisabled && GameManager.S.GetMaxTier() != tier) {
             rigidbody.useGravity = false;
             rigidbody.isKinematic = false;
             useGravity = false;
             gravityDisabled = true;
         }
-        if (GameManager.S.GetDestroyedScore() >= threshold){
+        if (GameManager.S.GetCurrentTier() >= tier){
             if(!highlighted){
                 highlighted = true;
                 CreateHighlightRenderers();
@@ -91,6 +101,11 @@ public class DestroyableObj : MonoBehaviour
     // }
 
     void OnTriggerEnter(Collider other) {
+        // If we clash into another object when gravity disable or we're 
+        // being sucked in
+        if ((suckedIn || gravityDisabled) && ((1 << other.gameObject.layer) & destroyableObjMask) != 0) {
+            SoundManager.instance.PlayDebrisHit(audioSource);
+        }
         // Once object gets close enough to touch frisbee, destroy it
         // if (other.tag == "Frisbee") {
         //     other.GetComponentInParent<Frisbee>().IncreaseGravityField();
@@ -98,12 +113,9 @@ public class DestroyableObj : MonoBehaviour
         // }
 
         // Suspend enviornmental gravity when being pulled by the frisbee
-        if (other.tag == "gravity field" && GameManager.S.GetDestroyedScore() >= threshold) {
-            //if(rigidBodyExists)
-            //TODO: add cooler shader effect here
-            // if(renderer){
-            //     renderer.material.color = Color.black;
-            // }
+        if (other.tag == "gravity field" && GameManager.S.GetCurrentTier() >= tier) {
+            suckedIn = true;
+
             RaycastHit hit;
             // If there's no force field in the way
             if(!Physics.Raycast(other.transform.position, (transform.position - other.transform.position).normalized, out hit, (transform.position - other.transform.position).magnitude, LayerMask.GetMask("Force Field"))){
@@ -133,7 +145,8 @@ public class DestroyableObj : MonoBehaviour
         }
 
         // Play fail-to-absorb sound if we haven't already
-        else if (other.tag == "gravity field" && GameManager.S.GetDestroyedScore() < threshold) {
+        else if (other.tag == "gravity field" && GameManager.S.GetCurrentTier() < tier) {
+            suckedIn = false;
             GravityField gf = other.GetComponent<GravityField>();
             if (gf.firstItemFailed) return;
             gf.firstItemFailed = true;
@@ -143,7 +156,6 @@ public class DestroyableObj : MonoBehaviour
 
     IEnumerator DisappearEffect(float timeToWait) {
         float startTime = Time.time;
-        // TODO: update shaders to dissolve
         //yield return new WaitForSeconds(timeToWait);
         while(Time.time - startTime < timeToWait){
             transform.position = Vector3.Lerp(originalPosition, frisbee.position, (Time.time-startTime)/timeToWait);
@@ -151,9 +163,8 @@ public class DestroyableObj : MonoBehaviour
             yield return null;
         }
 
-        GameManager.S.UpdateDestroyedScore(pointValue);
-        if (highlightHolder != null)
-            Destroy(highlightHolder);
+        GameManager.S.UpdateDestroyedScore(tier);
+        if (highlightHolder != null) Destroy(highlightHolder);
         Destroy(gameObject);
     }
 

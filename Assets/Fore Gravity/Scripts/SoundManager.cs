@@ -2,22 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-    // GM tier system - if object is last tier don't remove gravity
-    // ------> each object registers its tier with GM. GM finds max tier as well as # of objects in each tier, as well as point value given by object in each tier. 
-    // ------> threshold per tier is curve : need more and more objects as we go up in tiers. increase factor is 2^(-(n-1)) where n is number of tiers. After we level up each tier, multiply increase factor by 2. Tiers start at 0.
-    // ---------> fix big reactor so doesn't go flying at you (in DestroyableObj if this is not the last tier)
-
-    // - when sucked up or gravity explosion, plays noise per object if collides w/ other object
-    // ----> pitch scales with point score (normalize /max point score, * 1-score)
-
 public class SoundManager : MonoBehaviour
 {
     //priority list: 0 ending, 1 trashroomending, 2 frisbeegrabbed, 3 newplace,
     // 4 lostfrisbeelines, 5 success, 6 fail, 7 trashroomlines, 8 hexroomlines
     #pragma warning disable 0649
     [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource, sfxSource, leftControllerAudioSource, rightControllerAudioSource;
-    [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeRecallController, frisbeeAbsorb, frisbeeCatch, sparkSound, gravityOn, gravityOff, forceFieldRebound, explosionSounds, hexAmbience;
+    [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeRecallController, frisbeeAbsorb, frisbeeCatch, sparkSound, gravityOn, gravityOff, forceFieldRebound, explosionSounds, hexAmbience, largeDebrisHit;
     //beta clips 1-4
     [SerializeField] List<AudioClip> lostFrisbeeLines;
     //beta clip 5-7 
@@ -89,9 +80,9 @@ public class SoundManager : MonoBehaviour
         AudioSource.PlayClipAtPoint(hexAmbience, transform.position);
     }
 
-    public void PlayExplosionNoises() {
-        AudioSource.PlayClipAtPoint(explosionSounds, transform.position);
-    }
+    // public void PlayExplosionNoises() {
+    //     AudioSource.PlayClipAtPoint(explosionSounds, transform.position);
+    // }
 
     public void PlayGravity(bool on) {
         shipAudioSource.Stop();
@@ -102,6 +93,10 @@ public class SoundManager : MonoBehaviour
     public void PlayForceFieldRebound() {
         sfxSource.Stop();
         sfxSource.PlayOneShot(forceFieldRebound);
+    }
+
+    public void PlayDebrisHit(AudioSource source) {
+        source.PlayOneShot(largeDebrisHit);
     }
 
     /*********************
