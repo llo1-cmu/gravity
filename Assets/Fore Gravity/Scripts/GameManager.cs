@@ -98,8 +98,7 @@ public class GameManager : MonoBehaviour
             // If the objects destroyed in the CURRENT TIER is less than the max
             if (currDestroyed >= objectsInTier * tierFactor) {
                 currentTier++;
-                if (currentTier >= maxTier) currentTier = maxTier;
-                tierFactor *= 2;
+                if (currentTier < maxTier) tierFactor *= 2;
             }
         }
 
@@ -136,7 +135,7 @@ public class GameManager : MonoBehaviour
             won = false;
             SceneManager.LoadScene(startScene);
         }
-        if ((currentTier >= maxTier && !won) || Input.GetButtonUp("Fire3")) {
+        if ((currentTier > maxTier && !won) || Input.GetButtonUp("Fire3")) {
             if (SceneManager.GetActiveScene().name == startScene) {
                 SoundManager.instance.PlayTrashFinish();
                 siren.GetComponent<Siren>().Activate();

@@ -133,8 +133,8 @@ public class DestroyableObj : MonoBehaviour
                 originalPosition = transform.position;
 
                 SoundManager.instance.PlayAbsorb();
-                StartCoroutine(DisappearEffect(0.5f));
                 frisbee.GetComponentInParent<Frisbee>().IncreaseGravityField();
+                StartCoroutine(DisappearEffect(0.5f));
                 
                 GravityField gf = other.GetComponent<GravityField>();
                 if (gf.firstItemSucceed) return;
