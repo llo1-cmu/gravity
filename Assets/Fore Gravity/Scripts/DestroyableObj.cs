@@ -49,6 +49,8 @@ public class DestroyableObj : MonoBehaviour
             matColor = renderer.material.color;
         }
         originalScale = transform.localScale;
+        audioSource.spatialBlend = 0.7f;
+        audioSource.volume = 0.3f;
     }
 
     public int GetTier(){
