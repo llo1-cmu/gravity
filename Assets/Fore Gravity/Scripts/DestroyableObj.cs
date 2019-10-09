@@ -29,9 +29,12 @@ public class DestroyableObj : MonoBehaviour
     protected GameObject highlightHolder;
     protected SkinnedMeshRenderer[] highlightSkinnedRenderers;
     protected SkinnedMeshRenderer[] existingSkinnedRenderers;
-    protected static Material highlightMat;
+    //protected static Material highlightMat;
     /* End copied code */
-    private bool highlighted, gravityDisabled;
+    private bool highlighted, tierExceeded, gravityDisabled;
+    private static Material highlightStrong, highlightWeak;
+    // If the tier has been exceeded, use the Weak highlight, else use the Strong highlight
+    private Material highlightMat => GameManager.S.GetCurrentTier() > tier ? highlightWeak : highlightStrong;
     void Start(){
         rigidbody = GetComponent<Rigidbody>();
         renderer = GetComponent<Renderer>();
@@ -51,6 +54,22 @@ public class DestroyableObj : MonoBehaviour
         originalScale = transform.localScale;
         audioSource.spatialBlend = 0.7f;
         audioSource.volume = 0.3f;
+        audioSource.priority = 255;
+
+        // Since they're static, load only once
+        if(highlightStrong == null){
+            highlightStrong = (Material)Resources.Load("HoverHighlight_Strong", typeof(Material));
+        }
+        if(highlightWeak == null){
+            highlightWeak = (Material)Resources.Load("HoverHighlight_Weak", typeof(Material));
+        }
+        // If still null
+        if(highlightStrong == null){
+            Debug.LogError("HoverHighlight_Strong cannot be loaded!");
+        }
+        if(highlightWeak == null){
+            Debug.LogError("HoverHighlight_Weak cannot be loaded!");
+        }
     }
 
     public int GetTier(){
@@ -66,9 +85,18 @@ public class DestroyableObj : MonoBehaviour
             useGravity = false;
             gravityDisabled = true;
         }
+    }
+    // Render outline AFTER movement is applied
+    void LateUpdate(){
         if (GameManager.S.GetCurrentTier() >= tier){
             if(!highlighted){
                 highlighted = true;
+                CreateHighlightRenderers();
+            }
+            // Update the highlight material once the tier has been exceeded
+            if(GameManager.S.GetCurrentTier() > tier && !tierExceeded ){
+                tierExceeded = true;
+                Destroy(highlightHolder);
                 CreateHighlightRenderers();
             }
             UpdateHighlightRenderers();
@@ -173,10 +201,10 @@ public class DestroyableObj : MonoBehaviour
     /* Copied from SteamVR's Interactable.cs */
     protected virtual void CreateHighlightRenderers()
     {
-        highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
+        // highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
 
-        if (highlightMat == null)
-            Debug.LogError("<b>[SteamVR Interaction]</b> Hover Highlight Material is missing. Please create a material named 'SteamVR_HoverHighlight' and place it in a Resources folder");
+        // if (highlightMat == null)
+        //     Debug.LogError("<b>[SteamVR Interaction]</b> Hover Highlight Material is missing. Please create a material named 'SteamVR_HoverHighlight' and place it in a Resources folder");
 
         existingSkinnedRenderers = this.GetComponentsInChildren<SkinnedMeshRenderer>(true);
         highlightHolder = new GameObject("Highlighter");
