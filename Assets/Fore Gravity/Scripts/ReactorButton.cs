@@ -36,7 +36,6 @@ public class ReactorButton : MonoBehaviour
         cableBody.isKinematic = false;
         cableBody.useGravity = true;
         cable.transform.parent = null;
-
         blockingPlane.SetActive(false);
         // Attempt at fade, comment in to try and get fade.
         Debug.Log(lightsOnArray.Length);
@@ -49,12 +48,13 @@ public class ReactorButton : MonoBehaviour
         {
             SoundManager.instance.StartCoroutine(FadeOut(child));
         }
-      
+    
         if (siren != null)
         {
             siren.GetComponent<Siren>().Activate();
             siren2.GetComponent<Siren>().Activate();
         }
+        
             
         // Turns sections of light on and off. Use this if script breaks.
         //lightOn.SetActive(true);
