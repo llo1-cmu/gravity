@@ -13,7 +13,9 @@ public class DestroyableObjAudio : MonoBehaviour
     }
 
     IEnumerator PlayDebrisNoise() {
-        float len = SoundManager.instance.PlayDebrisHit(this.GetComponent<AudioSource>());
+        var source = this.GetComponent<AudioSource>();
+        source.priority = 128;
+        float len = SoundManager.instance.PlayDebrisHit(source);
         yield return new WaitForSeconds(len);
         Destroy(this.gameObject);
     }
