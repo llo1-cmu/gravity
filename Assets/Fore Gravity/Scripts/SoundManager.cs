@@ -9,6 +9,9 @@ public class SoundManager : MonoBehaviour
     #pragma warning disable 0649
     [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource, sfxSource, leftControllerAudioSource, rightControllerAudioSource, ambienceSource;
     [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeRecallController, frisbeeAbsorb, frisbeeCatch, sparkSound, gravityOn, gravityOff, forceFieldRebound, wallRebound, explosionSounds, hexAmbience, largeDebrisHit, trashAmbience;
+
+    //TODO: assign ship audio source in inspector for hex room, drag in these lines
+    [SerializeField] AudioClip gravityPoweringDown, greenReactor, blueReactor, orangeReactor, orangeAfter, greenAfter, orangeFirst, whereGreen, whereBlue, whereOrange;
     //beta clips 1-4
     [SerializeField] List<AudioClip> lostFrisbeeLines;
     //beta clip 5-7 
@@ -36,6 +39,8 @@ public class SoundManager : MonoBehaviour
     static bool playedSuccess = false;
     static bool isTrashRoom = false;
     #pragma warning restore 0649
+
+    enum Reactor { Blue, Orange, Green }
 
 
     void Awake()
@@ -92,8 +97,61 @@ public class SoundManager : MonoBehaviour
         sfxSource.PlayOneShot(wallRebound);
     }
 
-    public void PlayDebrisHit(AudioSource source) {
+    public float PlayDebrisHit(AudioSource source) {
         source.PlayOneShot(largeDebrisHit);
+        return largeDebrisHit.length;
+    }
+
+    // public float PlayGravityPoweringDown() {
+    //     shipAudioSource.Stop();
+    //     shipAudioSource.PlayOneShot(gravityPoweringDown);
+    //     return gravityPoweringDown.length;
+    // }
+
+    public void PlayGreenReactor() {
+        shipAudioSource.Stop();
+        // shipAudioSource.PlayOneShot(greenReactor);
+        StartCoroutine(PlayReactor(Reactor.Green));
+    }
+    public void PlayOrangeReactor() {
+        shipAudioSource.Stop();
+        // shipAudioSource.PlayOneShot(orangeReactor);
+        StartCoroutine(PlayReactor(Reactor.Orange));
+    }
+
+    public void PlayBlueReactor() {
+        shipAudioSource.Stop();
+        // shipAudioSource.PlayOneShot(blueReactor);
+        StartCoroutine(PlayReactor(Reactor.Blue));
+    }
+
+    IEnumerator PlayReactor(Reactor r) {
+        switch (r) {
+            case Reactor.Blue:
+                shipAudioSource.PlayOneShot(blueReactor);
+                yield return new WaitForSeconds(blueReactor.length);
+                break;
+            case Reactor.Orange:
+                shipAudioSource.PlayOneShot(orangeReactor);
+                yield return new WaitForSeconds(orangeReactor.length + 2);
+                frisbeeAudioSource.Stop();
+                frisbeeAudioSource.PlayOneShot(orangeAfter);
+                yield return new WaitForSeconds(orangeAfter.length);
+                break;
+            case Reactor.Green:
+                shipAudioSource.PlayOneShot(greenReactor);
+                yield return new WaitForSeconds(greenReactor.length);
+                shipAudioSource.PlayOneShot(gravityPoweringDown);
+                yield return new WaitForSeconds(gravityPoweringDown.length + 2);
+                GameManager.S.DisableGravity();
+                frisbeeAudioSource.Stop();
+                frisbeeAudioSource.PlayOneShot(greenAfter);
+                yield return new WaitForSeconds(greenAfter.length);
+                break;
+            default:
+                yield return new WaitForSeconds(0);
+                break;
+        }
     }
 
     /*********************
@@ -181,9 +239,9 @@ public class SoundManager : MonoBehaviour
 
     // Play the ending clip
     public void PlayEnding() {
+        instance.StopAllCoroutines();
         frisbeeAudioSource.Stop();
         queuedTracks.Add(0, ending);
-        instance.StopAllCoroutines();
         isPlaying = false;
         instance.StartCoroutine(PlayRoutine());
     }

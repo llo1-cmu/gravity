@@ -116,7 +116,9 @@ public class GameManager : MonoBehaviour
     }
 
     public void DisableGravity() {
-        disableGravity = true;
+        // disableGravity = true;
+        // StartCoroutine(PowerDownGravity());
+        BroadcastGravityDisabledTemp(true);
     }
 
     public void BroadcastGravityDisabledTemp(bool b) {
@@ -153,6 +155,12 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    // IEnumerator PowerDownGravity() {
+    //     // float f = SoundManager.instance.PlayGravityPoweringDown();
+    //     // yield return new WaitForSeconds(f);
+    //     BroadcastGravityDisabledTemp(true);
+    // }
 
     IEnumerator blackOutScreen(){
         // Tutorial.PlayWarning();
