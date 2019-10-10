@@ -2,35 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class DestroyableObj : MonoBehaviour
 {
 
-    // Assign frisbee score threshold in inspector
+    //TODO: add destroyableobj to layer mask, add tier, add audiosource
     #pragma warning disable 0649
-    [SerializeField] private int threshold;
+    [SerializeField] private int tier;
     [SerializeField] private int pointValue = 5;
+    [SerializeField] private LayerMask destroyableObjMask;
     private bool rigidBodyExists;
     private bool useGravity;
+    private bool suckedIn = false;
     private Color matColor;
     private Vector3 originalScale;
     private Transform frisbee;
     private Vector3 originalPosition;
     #pragma warning restore 0649
+    private AudioSource audioSource;
     new Rigidbody rigidbody;
     new Renderer renderer;
+
     /* Copied from SteamVR's Interactable.cs */
     protected MeshRenderer[] highlightRenderers;
     protected MeshRenderer[] existingRenderers;
     protected GameObject highlightHolder;
     protected SkinnedMeshRenderer[] highlightSkinnedRenderers;
     protected SkinnedMeshRenderer[] existingSkinnedRenderers;
-    protected static Material highlightMat;
+    //protected static Material highlightMat;
     /* End copied code */
-    private bool highlighted, gravityDisabled;
+    private bool highlighted, tierExceeded, gravityDisabled;
+    private static Material highlightStrong, highlightWeak;
+    // If the tier has been exceeded, use the Weak highlight, else use the Strong highlight
+    private Material highlightMat => GameManager.S.GetCurrentTier() > tier ? highlightWeak : highlightStrong;
     void Start(){
         rigidbody = GetComponent<Rigidbody>();
         renderer = GetComponent<Renderer>();
-        GameManager.S.AddDestroyableObject(pointValue);
+        audioSource = GetComponent<AudioSource>();
+
+        GameManager.S.AddTieredObject(tier);
+
         if(rigidbody){
             rigidBodyExists = true;
         }
@@ -41,22 +52,51 @@ public class DestroyableObj : MonoBehaviour
             matColor = renderer.material.color;
         }
         originalScale = transform.localScale;
+        audioSource.spatialBlend = 0.7f;
+        audioSource.volume = 0.3f;
+        audioSource.priority = 255;
+
+        // Since they're static, load only once
+        if(highlightStrong == null){
+            highlightStrong = (Material)Resources.Load("HoverHighlight_Strong", typeof(Material));
+        }
+        if(highlightWeak == null){
+            highlightWeak = (Material)Resources.Load("HoverHighlight_Weak", typeof(Material));
+        }
+        // If still null
+        if(highlightStrong == null){
+            Debug.LogError("HoverHighlight_Strong cannot be loaded!");
+        }
+        if(highlightWeak == null){
+            Debug.LogError("HoverHighlight_Weak cannot be loaded!");
+        }
     }
 
-    public int GetThreshold(){
-        return threshold;
+    public int GetTier(){
+        return tier;
     }
+    
 
     void Update() {
-        if (GameManager.S.GetBroadcastGravityDisabled() && !gravityDisabled) {
+        // If gravity is disabled and we aren't the max tier (aka final reactor)
+        if (GameManager.S.GetBroadcastGravityDisabled() && !gravityDisabled && GameManager.S.GetMaxTier() != tier) {
             rigidbody.useGravity = false;
             rigidbody.isKinematic = false;
             useGravity = false;
             gravityDisabled = true;
         }
-        if (GameManager.S.GetDestroyedScore() >= threshold){
+    }
+    // Render outline AFTER movement is applied
+    void LateUpdate(){
+        if (GameManager.S.GetCurrentTier() >= tier){
             if(!highlighted){
                 highlighted = true;
+                CreateHighlightRenderers();
+            }
+            // Update the highlight material once the tier has been exceeded
+            if(GameManager.S.GetCurrentTier() > tier && !tierExceeded ){
+                tierExceeded = true;
+                Destroy(highlightHolder);
                 CreateHighlightRenderers();
             }
             UpdateHighlightRenderers();
@@ -91,6 +131,11 @@ public class DestroyableObj : MonoBehaviour
     // }
 
     void OnTriggerEnter(Collider other) {
+        // If we clash into another object when gravity disable or we're 
+        // being sucked in
+        if ((suckedIn || gravityDisabled) && ((1 << other.gameObject.layer) & destroyableObjMask) != 0) {
+            SoundManager.instance.PlayDebrisHit(audioSource);
+        }
         // Once object gets close enough to touch frisbee, destroy it
         // if (other.tag == "Frisbee") {
         //     other.GetComponentInParent<Frisbee>().IncreaseGravityField();
@@ -98,35 +143,40 @@ public class DestroyableObj : MonoBehaviour
         // }
 
         // Suspend enviornmental gravity when being pulled by the frisbee
-        if (other.tag == "gravity field" && GameManager.S.GetDestroyedScore() >= threshold) {
-            if(rigidBodyExists)
-            //TODO: add cooler shader effect here
-            // if(renderer){
-            //     renderer.material.color = Color.black;
-            // }
-            if(rigidBodyExists){
-                if(useGravity){
-                    rigidbody.useGravity = false;
+        if (other.tag == "gravity field" && GameManager.S.GetCurrentTier() >= tier) {
+            suckedIn = true;
+
+            RaycastHit hit;
+            // If there's no force field in the way
+            if(!Physics.Raycast(other.transform.position, (transform.position - other.transform.position).normalized, out hit, (transform.position - other.transform.position).magnitude, LayerMask.GetMask("Force Field"))){
+                if(rigidBodyExists){
+                    if(useGravity){
+                        rigidbody.useGravity = false;
+                    }
+                    rigidbody.isKinematic = true;
+                    //rigidbody.detectCollisions = false;
                 }
-                rigidbody.isKinematic = true;
-                //rigidbody.detectCollisions = false;
+
+                frisbee = other.transform;
+                originalPosition = transform.position;
+
+                SoundManager.instance.PlayAbsorb();
+                frisbee.GetComponentInParent<Frisbee>().IncreaseGravityField();
+                StartCoroutine(DisappearEffect(0.5f));
+                
+                GravityField gf = other.GetComponent<GravityField>();
+                if (gf.firstItemSucceed) return;
+                gf.firstItemSucceed = true;
+                SoundManager.instance.PlayItemSucceed();
             }
-
-            frisbee = other.transform;
-            originalPosition = transform.position;
-
-            SoundManager.instance.PlayAbsorb();
-            StartCoroutine(DisappearEffect(0.5f));
-            frisbee.GetComponentInParent<Frisbee>().IncreaseGravityField();
-            
-            GravityField gf = other.GetComponent<GravityField>();
-            if (gf.firstItemSucceed) return;
-            gf.firstItemSucceed = true;
-            SoundManager.instance.PlayItemSucceed();
+            else{
+                print("Obstructed by force field: " + hit.transform.name);
+            }
         }
 
         // Play fail-to-absorb sound if we haven't already
-        else if (other.tag == "gravity field" && GameManager.S.GetDestroyedScore() < threshold) {
+        else if (other.tag == "gravity field" && GameManager.S.GetCurrentTier() < tier) {
+            suckedIn = false;
             GravityField gf = other.GetComponent<GravityField>();
             if (gf.firstItemFailed) return;
             gf.firstItemFailed = true;
@@ -136,7 +186,6 @@ public class DestroyableObj : MonoBehaviour
 
     IEnumerator DisappearEffect(float timeToWait) {
         float startTime = Time.time;
-        // TODO: update shaders to dissolve
         //yield return new WaitForSeconds(timeToWait);
         while(Time.time - startTime < timeToWait){
             transform.position = Vector3.Lerp(originalPosition, frisbee.position, (Time.time-startTime)/timeToWait);
@@ -144,19 +193,18 @@ public class DestroyableObj : MonoBehaviour
             yield return null;
         }
 
-        GameManager.S.UpdateDestroyedScore(pointValue);
-        if (highlightHolder != null)
-            Destroy(highlightHolder);
+        GameManager.S.UpdateDestroyedScore(tier);
+        if (highlightHolder != null) Destroy(highlightHolder);
         Destroy(gameObject);
     }
 
     /* Copied from SteamVR's Interactable.cs */
     protected virtual void CreateHighlightRenderers()
     {
-        highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
+        // highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
 
-        if (highlightMat == null)
-            Debug.LogError("<b>[SteamVR Interaction]</b> Hover Highlight Material is missing. Please create a material named 'SteamVR_HoverHighlight' and place it in a Resources folder");
+        // if (highlightMat == null)
+        //     Debug.LogError("<b>[SteamVR Interaction]</b> Hover Highlight Material is missing. Please create a material named 'SteamVR_HoverHighlight' and place it in a Resources folder");
 
         existingSkinnedRenderers = this.GetComponentsInChildren<SkinnedMeshRenderer>(true);
         highlightHolder = new GameObject("Highlighter");

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Valve.VR;
 using UnityEngine.SceneManagement;
@@ -17,9 +18,13 @@ public class GameManager : MonoBehaviour
 
     // Game Manager Vars
     public static GameManager S;
-    [SerializeField] private int destroyedObjects = 0;
-    // TODO: auto populate this by having destroyable objs send mssg to gm
-    [SerializeField] private int totalPointsToWin = 0;
+    [SerializeField] private int maxTier = 0;
+    [SerializeField] private int currentTier = 0;
+    private double tierFactor = 1;
+    Dictionary<int, int> objectsPerTier;
+    Dictionary<int, int> destroyedObjectsPerTier;
+    private int destroyedObjects = 0;
+
     bool won = false;
     bool disableGravity = false;
     bool broadcastGravityDisabled = false;
@@ -38,6 +43,8 @@ public class GameManager : MonoBehaviour
 
     void Awake(){
         S = this;
+        objectsPerTier = new Dictionary<int, int>();
+        destroyedObjectsPerTier = new Dictionary<int, int>();
     }
 
     void Start(){
@@ -45,14 +52,58 @@ public class GameManager : MonoBehaviour
         SteamVR_Fade.Start(Color.clear, 2);
     }
 
-    public void AddDestroyableObject(int points){
-        totalPointsToWin += points;
+    public void AddTieredObject(int tier){
+        // Update our stats for tiered values
+        int currVal = 0;
+        if (! (objectsPerTier.TryGetValue(tier, out currVal))) {
+            objectsPerTier.Add(tier, 1);
+            destroyedObjectsPerTier.Add(tier, 0);
+        } else {
+            objectsPerTier.Remove(tier);
+            objectsPerTier.Add(tier, currVal+1);
+        }
+
+        if (tier > maxTier) {
+            maxTier = tier;
+            tierFactor = Math.Pow(2, -maxTier);
+        }
     }
 
-    public void UpdateDestroyedScore(int newVal) {
-        destroyedObjects += newVal;
+    public int GetCurrentTier() {
+        return currentTier;
+    }
 
-        // If we've destroyed an object after calling disable gravity
+    public int GetMaxTier() {
+        return maxTier;
+    }
+
+    public void UpdateDestroyedScore(int tier) {
+        destroyedObjects += 1;
+        
+        // Update our destroyed values for the given tier (only care for objects
+        // in the current tier)
+        if (tier == currentTier) {
+            int currDestroyed = 0;
+            if (!(destroyedObjectsPerTier.TryGetValue(tier, out currDestroyed))) {
+                //TODO: this shouldn't happen, do some error handling
+                destroyedObjectsPerTier.Add(tier, 1);
+            }
+            currDestroyed += 1;
+            destroyedObjectsPerTier.Remove(tier);
+            destroyedObjectsPerTier.Add(tier, currDestroyed);
+            int objectsInTier = 0;
+            // TODO: error handling
+            objectsPerTier.TryGetValue(currentTier, out objectsInTier);
+
+            // If the objects destroyed in the CURRENT TIER is less than the max
+            if (currDestroyed >= objectsInTier * tierFactor) {
+                currentTier++;
+                if (currentTier < maxTier) tierFactor *= 2;
+            }
+        }
+
+
+        // If we've destroyed an object after calling disable gravity in HexRoom
         if (disableGravity) {
             disableGravity = false;
             //Play voice line for disable gravity
@@ -84,7 +135,7 @@ public class GameManager : MonoBehaviour
             won = false;
             SceneManager.LoadScene(startScene);
         }
-        if ((destroyedObjects >= 2000 && !won) || Input.GetButtonUp("Fire3")) {
+        if ((currentTier > maxTier && !won) || Input.GetButtonUp("Fire3")) {
             if (SceneManager.GetActiveScene().name == startScene) {
                 SoundManager.instance.PlayTrashFinish();
                 siren.GetComponent<Siren>().Activate();
@@ -93,6 +144,7 @@ public class GameManager : MonoBehaviour
             }
             else /* we want ending to play */ {
                 if (!playingEnd) {
+                    Debug.Log(maxTier);
                     SoundManager.instance.PlayEnding();
                     playingEnd = true;
                     won = true;
@@ -140,9 +192,6 @@ public class GameManager : MonoBehaviour
             won = false;   
             disableGravity = false;
             broadcastGravityDisabled = false;
-
-            // TODO: move these to a SOLID start of the new room!
-            SoundManager.instance.PlayHexAmbience();
 
             //SceneManager.UnloadSceneAsync(startScene);
         }

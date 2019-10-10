@@ -34,7 +34,8 @@ public class Frisbee : MonoBehaviour
     [SerializeField] private float recallSpeed = 10.0f;
     [SerializeField] private Material originalMaterial, recallMaterial;
     [SerializeField] private MeshRenderer[] frisbeeRim;
-    [SerializeField] private Material rimOriginalMat, rimRecallMat;
+    [SerializeField] private Material rimRecallMat;
+    private Material[] rimOriginalMats;
 
     // Sound manager bools
     private bool firstCaughtPlayed;
@@ -45,7 +46,12 @@ public class Frisbee : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         velocityEstimator = GetComponent<Valve.VR.InteractionSystem.VelocityEstimator>();
         SoundManager.instance.PlayFrisbeePrompt();
+        SoundManager.instance.PlayRoomAmbience();
         // introScene = false;
+        rimOriginalMats = new Material[frisbeeRim.Length];
+        for(int i = 0; i < frisbeeRim.Length; i++){
+            rimOriginalMats[i] = frisbeeRim[i].material;
+        }
     }
 
     void Update()
@@ -107,8 +113,11 @@ public class Frisbee : MonoBehaviour
             rigidbody.velocity = velocityEstimator.GetVelocityEstimate();
             // Restore material
             FrisbeeSphere.material = originalMaterial;
-            foreach(MeshRenderer renderer in frisbeeRim){
-                renderer.material = rimOriginalMat;
+            // foreach(MeshRenderer renderer in frisbeeRim){
+            //     renderer.material = rimOriginalMat;
+            // }
+            for(int i = 0; i < frisbeeRim.Length; i++){
+                frisbeeRim[i].material = rimOriginalMats[i];
             }
         }
         else if (!recalling && recordingPos){
@@ -164,9 +173,6 @@ public class Frisbee : MonoBehaviour
             case "UI Button":
                 other.GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
                 break;
-            case "Force Field":
-                SoundManager.instance.PlayForceFieldRebound();
-                break;
             default:
                 break;
         }
@@ -194,8 +200,11 @@ public class Frisbee : MonoBehaviour
         velocityEstimator.BeginEstimatingVelocity();
         SoundManager.instance.PlayFrisbeeCatch();
         FrisbeeSphere.material = originalMaterial;
-        foreach(MeshRenderer renderer in frisbeeRim){
-            renderer.material = rimOriginalMat;
+        // foreach(MeshRenderer renderer in frisbeeRim){
+        //     renderer.material = rimOriginalMat;
+        // }
+        for(int i = 0; i < frisbeeRim.Length; i++){
+            frisbeeRim[i].material = rimOriginalMats[i];
         }
         gravityField.SetActive(false);
 
@@ -226,11 +235,23 @@ public class Frisbee : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision collision){
-        if(collision.collider.tag == "Target Plane"){
-            Vector3 offsetVector = collision.contacts[0].point - collision.transform.position;
-            print("Plane hit: " + collision.gameObject.name);
-            print("Offset vector: " + offsetVector.ToString("f4"));
-            print("Offset distance: " + offsetVector.magnitude.ToString("f4"));
+        switch (collision.collider.tag) {
+            case "Target Plane":
+                Vector3 offsetVector = collision.contacts[0].point - collision.transform.position;
+                print("Plane hit: " + collision.gameObject.name);
+                print("Offset vector: " + offsetVector.ToString("f4"));
+                print("Offset distance: " + offsetVector.magnitude.ToString("f4"));
+                break;
+            case "Force Field":
+                SoundManager.instance.PlayForceFieldRebound();
+                Debug.Log("touched force field");
+                break;
+            case "Wall":
+                Debug.Log("touched wall");
+                SoundManager.instance.PlayWallRebound();
+                break;
+            default:
+                break;
         }
     }
 

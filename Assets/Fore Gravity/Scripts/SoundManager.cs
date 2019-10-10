@@ -2,22 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//TODO: reassign ship source in big trash room, add "Force Field" tag to force fields, assign hex ambience and other sounds
-// Reactor button - add trigger for play gravity noises
-// reactor button - add field for disablegravity
-// attach script and add collider to sign
-
-    // GM tier system - if object is last tier don't remove gravity
-    // - play gravity  noises from player when gravity explosion happens
-    // - when sucked up, plays noise per object if collides w/ other object
-
 public class SoundManager : MonoBehaviour
 {
     //priority list: 0 ending, 1 trashroomending, 2 frisbeegrabbed, 3 newplace,
     // 4 lostfrisbeelines, 5 success, 6 fail, 7 trashroomlines, 8 hexroomlines
     #pragma warning disable 0649
-    [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource, sfxSource, leftControllerAudioSource, rightControllerAudioSource;
-    [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeRecallController, frisbeeAbsorb, frisbeeCatch, sparkSound, gravityOn, gravityOff, forceFieldRebound, explosionSounds, hexAmbience;
+    [SerializeField] AudioSource shipAudioSource, frisbeeAudioSource, sfxSource, leftControllerAudioSource, rightControllerAudioSource, ambienceSource;
+    [SerializeField] AudioClip frisbeeThrow, frisbeeRecall, frisbeeRecallController, frisbeeAbsorb, frisbeeCatch, sparkSound, gravityOn, gravityOff, forceFieldRebound, wallRebound, explosionSounds, hexAmbience, largeDebrisHit, trashAmbience;
     //beta clips 1-4
     [SerializeField] List<AudioClip> lostFrisbeeLines;
     //beta clip 5-7 
@@ -85,14 +76,6 @@ public class SoundManager : MonoBehaviour
         source.PlayOneShot(sparkSound);
     }
 
-    public void PlayHexAmbience() {
-        AudioSource.PlayClipAtPoint(hexAmbience, transform.position);
-    }
-
-    public void PlayExplosionNoises() {
-        AudioSource.PlayClipAtPoint(explosionSounds, transform.position);
-    }
-
     public void PlayGravity(bool on) {
         shipAudioSource.Stop();
         if (on) shipAudioSource.PlayOneShot(gravityOn);
@@ -104,9 +87,27 @@ public class SoundManager : MonoBehaviour
         sfxSource.PlayOneShot(forceFieldRebound);
     }
 
+    public void PlayWallRebound() {
+        sfxSource.Stop();
+        sfxSource.PlayOneShot(wallRebound);
+    }
+
+    public void PlayDebrisHit(AudioSource source) {
+        source.PlayOneShot(largeDebrisHit);
+    }
+
     /*********************
         Longer Sounds
     *********************/
+
+    public void PlayRoomAmbience() {
+        if (playedIntro) {
+            ambienceSource.PlayOneShot(hexAmbience);
+        } else {
+            ambienceSource.PlayOneShot(trashAmbience);
+        }
+    }
+
 
     // Continue to call these until the frisbee has been grabbed as it drifts towards the player in the intro scene
     public void PlayFrisbeePrompt()
