@@ -79,7 +79,7 @@ public class DestroyableObj : MonoBehaviour
 
     void Update() {
         // If gravity is disabled and we aren't the max tier (aka final reactor)
-        if (GameManager.S.GetBroadcastGravityDisabled() && !gravityDisabled && GameManager.S.GetMaxTier() != tier) {
+        if (GameManager.S.GetBroadcastGravityDisabled() && !gravityDisabled && tier < GameManager.S.GetMaxTier() - 1) {
             rigidbody.useGravity = false;
             rigidbody.isKinematic = false;
             useGravity = false;
@@ -134,7 +134,12 @@ public class DestroyableObj : MonoBehaviour
         // If we clash into another object when gravity disable or we're 
         // being sucked in
         if ((suckedIn || gravityDisabled) && ((1 << other.gameObject.layer) & destroyableObjMask) != 0) {
-            SoundManager.instance.PlayDebrisHit(audioSource);
+            var obj = new GameObject();
+            obj.AddComponent(typeof(AudioSource));
+            obj.AddComponent(typeof(DestroyableObjAudio));
+            obj.transform.parent = null;
+            obj.transform.position = transform.position;
+            obj.GetComponent<DestroyableObjAudio>().PlayHit();
         }
         // Once object gets close enough to touch frisbee, destroy it
         // if (other.tag == "Frisbee") {
@@ -161,6 +166,7 @@ public class DestroyableObj : MonoBehaviour
                 originalPosition = transform.position;
 
                 SoundManager.instance.PlayAbsorb();
+
                 frisbee.GetComponentInParent<Frisbee>().IncreaseGravityField();
                 StartCoroutine(DisappearEffect(0.5f));
                 
@@ -191,6 +197,18 @@ public class DestroyableObj : MonoBehaviour
             transform.position = Vector3.Lerp(originalPosition, frisbee.position, (Time.time-startTime)/timeToWait);
             transform.localScale = originalScale * (1f - Mathf.Pow((Time.time-startTime)/timeToWait, 2f) );
             yield return null;
+        }
+
+        switch (tier) {
+            case 3:
+                SoundManager.instance.PlayOrangeReactor();
+                break;
+            case 6:
+                SoundManager.instance.PlayGreenReactor();
+                break;
+            case 9:
+                SoundManager.instance.PlayBlueReactor();
+                break;
         }
 
         GameManager.S.UpdateDestroyedScore(tier);
