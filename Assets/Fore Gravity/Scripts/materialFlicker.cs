@@ -7,18 +7,14 @@ public class materialFlicker : MonoBehaviour
     //private Material[] materials;
     //[SerializeField] private MeshRenderer imageColor;
     [SerializeField] private Material [] blueMaterial;
-    private List<Color> colors;
-    
+    bool status;
+
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(fadeInAndOutRepeat(.5f, 4f));
-        foreach (Material mat in blueMaterial)
-        {
-            Color colour = mat.GetColor("_EmissionColor");
-            colors.Add(colour);
-
-        }
+        
+    }
 
     // Update is called once per frame
     void Update()
@@ -28,10 +24,10 @@ public class materialFlicker : MonoBehaviour
 
     void OnDestroy()
     {
-            for (int i = 0; i < blueMaterial.Length; i++)
-            {
-                blueMaterial[i].SetColor("_EmissionColor", colors[i]);
-            }
+        if (!status)
+            fadeInAndOut(true);
+        else
+            fadeInAndOut(false);
 
     }
 
@@ -69,12 +65,14 @@ public class materialFlicker : MonoBehaviour
         {
             //Fade out
             yield return fadeInAndOut(false);
+            status = false;
 
             //Wait
             yield return waitForXSec;
 
             //Fade-in 
             yield return fadeInAndOut(true);
+            status = true;
 
             yield return waitForXSec2;
         }
