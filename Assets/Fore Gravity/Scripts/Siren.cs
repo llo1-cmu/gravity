@@ -5,8 +5,10 @@ using UnityEngine;
 public class Siren : MonoBehaviour
 {
 
-    [SerializeField] private float speed; //In degrees per second, can be negative to spin other direction
+    [SerializeField] private float speed=2; //In degrees per second, can be negative to spin other direction
     [SerializeField] private bool isTriggered;
+    [SerializeField] Light lightSource;
+    [SerializeField] AudioSource sirenSource;
 
     private float currentRotationY = 0;
 
@@ -21,18 +23,35 @@ public class Siren : MonoBehaviour
     {
         if (isTriggered)
         {
+            
             Spin();
+
         }
+    }
+
+    void sirenStart()
+    {
+        
+        lightSource.intensity = 5;
+        if (sirenSource != null)
+        {
+            sirenSource.Play();
+            sirenSource.loop = true;
+        }
+       
+
     }
     
     void Spin()
     {
-        transform.Rotate(new Vector3(0, speed * Time.deltaTime, 0), Space.World);
+        lightSource.transform.Rotate(new Vector3(0, speed * Time.deltaTime, 0), Space.World);
     }
 
     public void Activate()
     {
         isTriggered = true;
+  
+        sirenStart();
     } 
 
     public void Deactivate()
